@@ -1232,10 +1232,10 @@ def uploaded_file(filename):
 
 def open_browser():
     time.sleep(1.5)
-    webbrowser.open("http://127.0.0.1:5000")
+    webbrowser.open("http://127.0.0.1:5001")
 
 
 if __name__ == "__main__":
     init_db()
     threading.Thread(target=open_browser, daemon=True).start()
-    app.run(host="127.0.0.1", port=5000, debug=False, use_reloader=False)
+    app.run(host="127.0.0.1", port=5001, debug=False, use_reloader=False)
