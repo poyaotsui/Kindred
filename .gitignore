@@ -1,0 +1,6 @@
+kindred.db
+*.db
+__pycache__/
+*.pyc
+static/uploads/
+.env
