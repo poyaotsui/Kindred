@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - Kindred</title>
+    <style>
+        :root[data-theme="dark"] {
+            --bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --bg-solid: #1a1a2e; --surface: rgba(0,0,0,0.25); --surface2: rgba(0,0,0,0.3);
+            --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.06);
+            --text: #eee; --text2: #aaa; --text3: rgba(255,255,255,0.9);
+            --sticker-bg: rgba(255,255,255,0.12); --sticker-border: rgba(255,255,255,0.2);
+        }
+        :root[data-theme="light"] {
+            --bg: linear-gradient(135deg, #e8f4fd 0%, #dbeafe 100%);
+            --bg-solid: #f0f4f8; --surface: rgba(255,255,255,0.6); --surface2: rgba(255,255,255,0.8);
+            --border: rgba(0,0,0,0.1); --border2: rgba(0,0,0,0.06);
+            --text: #1a1a2e; --text2: #555; --text3: #1a1a2e;
+            --sticker-bg: rgba(0,0,0,0.06); --sticker-border: rgba(0,0,0,0.12);
+        }
+        * { box-sizing: border-box; }
+        body { font-family: system-ui,-apple-system,sans-serif; margin: 0; min-height: 100vh; background: var(--bg); color: var(--text); }
+        .header {
+            background: var(--surface2); padding: 0.9rem 1.5rem;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+        .header a { color: #4a90e2; text-decoration: none; font-size: 0.9rem; }
+        .header a:hover { text-decoration: underline; }
+        .container { max-width: 640px; margin: 0 auto; padding: 2rem 1.5rem; }
+        h1 { margin: 0 0 0.4rem; font-size: 1.6rem; }
+        .subtitle { color: var(--text2); font-size: 0.9rem; margin-bottom: 2rem; }
+        .lb-list { display: flex; flex-direction: column; gap: 0.6rem; }
+        .lb-entry {
+            display: flex; align-items: center; gap: 1rem;
+            background: var(--surface); border: 1px solid var(--border2);
+            border-radius: 10px; padding: 0.9rem 1.1rem;
+            transition: border-color 0.2s;
+        }
+        .lb-entry.is-you { border-color: rgba(74,144,226,0.4); background: rgba(74,144,226,0.06); }
+        .lb-entry:hover { border-color: var(--border); }
+        .rank { font-size: 1.25rem; font-weight: 800; min-width: 2.2rem; text-align: center; }
+        .rank.gold   { color: #f59e0b; }
+        .rank.silver { color: #9ca3af; }
+        .rank.bronze { color: #b45309; }
+        .rank.other  { color: var(--text2); font-size: 1rem; }
+        .lb-avatar {
+            width: 44px; height: 44px; border-radius: 50%; background: #4a90e2;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; font-weight: 700; color: white; overflow: hidden; flex-shrink: 0;
+        }
+        .lb-avatar img { width: 44px; height: 44px; object-fit: cover; }
+        .lb-info { flex: 1; min-width: 0; }
+        .lb-name { font-weight: 600; font-size: 1rem; color: var(--text3); display: flex; align-items: center; gap: 0.4rem; }
+        .you-tag { font-size: 0.7rem; background: rgba(74,144,226,0.25); color: #4a90e2; border-radius: 4px; padding: 1px 6px; font-weight: 600; }
+        .lb-badges { font-size: 1rem; margin-top: 2px; }
+        .lb-streak { display: flex; align-items: center; gap: 0.3rem; font-size: 1.2rem; font-weight: 700; color: #f59e0b; white-space: nowrap; }
+        .lb-streak span { font-size: 0.8rem; color: var(--text2); font-weight: 400; }
+        .lb-profile-link { color: #4a90e2; text-decoration: none; font-size: 0.8rem; }
+        .lb-profile-link:hover { text-decoration: underline; }
+        .empty-state { color: var(--text2); text-align: center; padding: 3rem 0; font-size: 0.95rem; }
+    </style>
+</head>
+<body>
+<script>
+(function(){
+    try { var t = localStorage.getItem('kindred_theme'); if(t) document.documentElement.setAttribute('data-theme', t); } catch(e){}
+})();
+</script>
+
+<div class="header">
+    <a href="/">&#8249; Kindred</a>
+    <span>
+        <a href="/friends">Friends</a>
+        &nbsp;·&nbsp;
+        Signed in as {{ user.display_name or user.email.split('@')[0] }}
+    </span>
+</div>
+
+<div class="container">
+    <h1>Leaderboard</h1>
+    <p class="subtitle">You and your friends ranked by current check-in streak.</p>
+
+    {% if entries %}
+    <div class="lb-list">
+        {% for entry in entries %}
+        {% set rank_num = loop.index %}
+        <div class="lb-entry {{ 'is-you' if entry.is_you else '' }}">
+            <div class="rank {{ 'gold' if rank_num == 1 else ('silver' if rank_num == 2 else ('bronze' if rank_num == 3 else 'other')) }}">
+                {% if rank_num == 1 %}🥇
+                {% elif rank_num == 2 %}🥈
+                {% elif rank_num == 3 %}🥉
+                {% else %}{{ rank_num }}{% endif %}
+            </div>
+            {% if entry.avatar %}
+            <div class="lb-avatar"><img src="/uploads/{{ entry.avatar }}" alt="{{ entry.display_name }}"></div>
+            {% else %}
+            <div class="lb-avatar">{{ entry.display_name[0]|upper }}</div>
+            {% endif %}
+            <div class="lb-info">
+                <div class="lb-name">
+                    {{ entry.display_name }}
+                    {% if entry.is_you %}<span class="you-tag">You</span>{% endif %}
+                </div>
+                <div class="lb-badges">
+                    {% for b in entry.badges %}{{ b.emoji }}{% endfor %}
+                </div>
+                <a href="/profile/{{ entry.display_name }}" class="lb-profile-link">View profile</a>
+            </div>
+            <div class="lb-streak">
+                🔥 {{ entry.streak }} <span>day streak</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">Add friends to see them on the leaderboard!</div>
+    {% endif %}
+</div>
+</body>
+</html>

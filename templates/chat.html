@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with {{ friend.display_name }} - Kindred</title>
+    <style>
+        :root[data-theme="dark"] {
+            --bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --bg-solid: #1a1a2e; --surface: rgba(0,0,0,0.25); --surface2: rgba(0,0,0,0.3);
+            --border: rgba(255,255,255,0.1); --text: #eee; --text2: #aaa;
+            --input-bg: rgba(255,255,255,0.05); --input-border: rgba(255,255,255,0.2);
+            --bubble-me: #4a90e2; --bubble-them: rgba(255,255,255,0.1);
+            --bubble-me-text: white; --bubble-them-text: #eee;
+        }
+        :root[data-theme="light"] {
+            --bg: linear-gradient(135deg, #e8f4fd 0%, #dbeafe 100%);
+            --bg-solid: #f0f4f8; --surface: rgba(255,255,255,0.6); --surface2: rgba(255,255,255,0.8);
+            --border: rgba(0,0,0,0.1); --text: #1a1a2e; --text2: #555;
+            --input-bg: rgba(255,255,255,0.8); --input-border: rgba(0,0,0,0.2);
+            --bubble-me: #4a90e2; --bubble-them: rgba(0,0,0,0.08);
+            --bubble-me-text: white; --bubble-them-text: #1a1a2e;
+        }
+        * { box-sizing: border-box; }
+        body { font-family: system-ui, -apple-system, sans-serif; margin: 0; height: 100vh; display: flex; flex-direction: column; background: var(--bg); color: var(--text); }
+        .header {
+            background: var(--surface2); padding: 0.9rem 1.5rem;
+            display: flex; align-items: center; gap: 1rem;
+            border-bottom: 1px solid var(--border); flex-shrink: 0;
+        }
+        .header a { color: #4a90e2; text-decoration: none; font-size: 0.9rem; }
+        .header a:hover { text-decoration: underline; }
+        .friend-avatar {
+            width: 40px; height: 40px; border-radius: 50%; background: #4a90e2;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1.1rem; color: white; overflow: hidden; flex-shrink: 0;
+        }
+        .friend-avatar img { width: 40px; height: 40px; object-fit: cover; }
+        .friend-name { font-weight: 600; font-size: 1.05rem; }
+        .header-spacer { flex: 1; }
+        /* Chat area */
+        .chat-area { flex: 1; overflow-y: auto; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.6rem; }
+        .msg-row { display: flex; align-items: flex-end; gap: 0.5rem; }
+        .msg-row.me { flex-direction: row-reverse; }
+        .msg-avatar {
+            width: 30px; height: 30px; border-radius: 50%; background: #4a90e2;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 700; color: white; flex-shrink: 0; overflow: hidden;
+        }
+        .msg-avatar img { width: 30px; height: 30px; object-fit: cover; }
+        .bubble {
+            max-width: 65%; padding: 0.6rem 0.9rem; border-radius: 16px;
+            font-size: 0.9rem; line-height: 1.45; word-break: break-word;
+        }
+        .msg-row.me .bubble { background: var(--bubble-me); color: var(--bubble-me-text); border-bottom-right-radius: 4px; }
+        .msg-row.them .bubble { background: var(--bubble-them); color: var(--bubble-them-text); border-bottom-left-radius: 4px; }
+        .bubble-time { font-size: 0.7rem; opacity: 0.6; margin-top: 3px; text-align: right; }
+        .msg-row.them .bubble-time { text-align: left; }
+        .empty-chat { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--text2); font-size: 0.95rem; }
+        /* Input area */
+        .input-area {
+            background: var(--surface2); border-top: 1px solid var(--border);
+            padding: 0.9rem 1.25rem; display: flex; gap: 0.6rem; align-items: flex-end; flex-shrink: 0;
+        }
+        .msg-input {
+            flex: 1; padding: 0.65rem 0.9rem; border: 1px solid var(--input-border);
+            border-radius: 20px; background: var(--input-bg); color: var(--text);
+            font-size: 0.9rem; resize: none; font-family: inherit;
+            max-height: 120px; outline: none;
+        }
+        .msg-input:focus { border-color: #4a90e2; }
+        .send-btn {
+            background: #4a90e2; color: white; border: none; border-radius: 50%;
+            width: 42px; height: 42px; font-size: 1.1rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+            transition: background 0.2s;
+        }
+        .send-btn:hover { background: #357abd; }
+        .send-btn:disabled { background: #555; cursor: default; }
+    </style>
+</head>
+<body>
+<script>
+(function(){
+    try { var t = localStorage.getItem('kindred_theme'); if(t) document.documentElement.setAttribute('data-theme', t); } catch(e){}
+})();
+</script>
+
+<div class="header">
+    <a href="/friends">&#8249; Friends</a>
+    {% if friend.avatar %}
+    <div class="friend-avatar"><img src="/uploads/{{ friend.avatar }}" alt="{{ friend.display_name }}"></div>
+    {% else %}
+    <div class="friend-avatar">{{ friend.display_name[0]|upper }}</div>
+    {% endif %}
+    <span class="friend-name">{{ friend.display_name }}</span>
+    <span class="header-spacer"></span>
+    <a href="/profile/{{ friend.display_name }}">View Profile</a>
+</div>
+
+<div class="chat-area" id="chatArea">
+    {% if messages %}
+        {% for m in messages %}
+        <div class="msg-row {{ 'me' if m.from_me else 'them' }}">
+            {% if not m.from_me %}
+            {% if friend.avatar %}
+            <div class="msg-avatar"><img src="/uploads/{{ friend.avatar }}" alt=""></div>
+            {% else %}
+            <div class="msg-avatar">{{ friend.display_name[0]|upper }}</div>
+            {% endif %}
+            {% endif %}
+            <div>
+                <div class="bubble">{{ m.content }}</div>
+                <div class="bubble-time">{{ m.created_at[11:16] if m.created_at else '' }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-chat">No messages yet. Say hi!</div>
+    {% endif %}
+</div>
+
+<div class="input-area">
+    <textarea class="msg-input" id="msgInput" placeholder="Type a message..." rows="1"
+        onkeydown="handleMsgKey(event)" oninput="autoResize(this)"></textarea>
+    <button class="send-btn" onclick="sendMessage()" id="sendBtn">&#9658;</button>
+</div>
+
+<script>
+var FRIEND_ID = {{ friend.id }};
+
+// Scroll to bottom on load
+document.getElementById('chatArea').scrollTop = document.getElementById('chatArea').scrollHeight;
+
+function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+function handleMsgKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+function sendMessage() {
+    var input = document.getElementById('msgInput');
+    var content = input.value.trim();
+    if (!content) return;
+    var btn = document.getElementById('sendBtn');
+    btn.disabled = true;
+    fetch('/api/messages', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ to_user_id: FRIEND_ID, content: content })
+    }).then(function(r) { return r.json(); }).then(function(d) {
+        btn.disabled = false;
+        if (!d.ok) return;
+        appendMessage(content, true);
+        input.value = '';
+        input.style.height = 'auto';
+    }).catch(function() { btn.disabled = false; });
+}
+function appendMessage(content, fromMe) {
+    var chatArea = document.getElementById('chatArea');
+    var empty = chatArea.querySelector('.empty-chat');
+    if (empty) empty.remove();
+    var row = document.createElement('div');
+    row.className = 'msg-row ' + (fromMe ? 'me' : 'them');
+    var now = new Date();
+    var time = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+    row.innerHTML = '<div><div class="bubble">' + escHtml(content) + '</div><div class="bubble-time">' + time + '</div></div>';
+    chatArea.appendChild(row);
+    chatArea.scrollTop = chatArea.scrollHeight;
+}
+function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Poll for new messages every 5s
+var lastCount = {{ messages|length }};
+function pollMessages() {
+    fetch(window.location.href).then(function(r) { return r.text(); }).then(function(html) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(html, 'text/html');
+        var newArea = doc.getElementById('chatArea');
+        if (!newArea) return;
+        var rows = newArea.querySelectorAll('.msg-row');
+        if (rows.length > lastCount) {
+            var chatArea = document.getElementById('chatArea');
+            var wasAtBottom = chatArea.scrollHeight - chatArea.scrollTop - chatArea.clientHeight < 50;
+            for (var i = lastCount; i < rows.length; i++) {
+                chatArea.appendChild(rows[i].cloneNode(true));
+            }
+            lastCount = rows.length;
+            if (wasAtBottom) chatArea.scrollTop = chatArea.scrollHeight;
+        }
+    }).catch(function(){});
+    setTimeout(pollMessages, 5000);
+}
+setTimeout(pollMessages, 5000);
+</script>
+</body>
+</html>
