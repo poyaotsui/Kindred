@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ profile.display_name }} - Kindred</title>
+    <style>
+        :root[data-theme="dark"] {
+            --bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --bg-solid: #1a1a2e; --surface: rgba(0,0,0,0.25); --surface2: rgba(0,0,0,0.3);
+            --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.06);
+            --text: #eee; --text2: #aaa; --text3: rgba(255,255,255,0.9);
+            --input-bg: rgba(255,255,255,0.05); --input-border: rgba(255,255,255,0.2);
+            --sticker-bg: rgba(255,255,255,0.12); --sticker-border: rgba(255,255,255,0.25);
+            --whiteboard: #2d3436;
+        }
+        :root[data-theme="light"] {
+            --bg: linear-gradient(135deg, #e8f4fd 0%, #dbeafe 100%);
+            --bg-solid: #f0f4f8; --surface: rgba(255,255,255,0.6); --surface2: rgba(255,255,255,0.8);
+            --border: rgba(0,0,0,0.1); --border2: rgba(0,0,0,0.06);
+            --text: #1a1a2e; --text2: #555; --text3: #1a1a2e;
+            --input-bg: rgba(255,255,255,0.8); --input-border: rgba(0,0,0,0.2);
+            --sticker-bg: rgba(255,255,255,0.9); --sticker-border: rgba(0,0,0,0.15);
+            --whiteboard: #f0f4f8;
+        }
+        * { box-sizing: border-box; }
+        body { font-family: system-ui,-apple-system,sans-serif; margin: 0; min-height: 100vh; background: var(--bg); color: var(--text); }
+        .header {
+            background: var(--surface2); padding: 0.9rem 1.5rem;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+        .header a { color: #4a90e2; text-decoration: none; font-size: 0.9rem; }
+        .header a:hover { text-decoration: underline; }
+        .container { max-width: 760px; margin: 0 auto; padding: 2rem 1.5rem; }
+        /* Profile card */
+        .profile-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.75rem; margin-bottom: 1.5rem;
+            display: flex; gap: 1.5rem; align-items: flex-start; flex-wrap: wrap;
+        }
+        .profile-avatar-wrap { position: relative; flex-shrink: 0; }
+        .profile-avatar {
+            width: 90px; height: 90px; border-radius: 50%; background: #4a90e2;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.2rem; font-weight: 700; color: white; overflow: hidden;
+            border: 3px solid rgba(74,144,226,0.4);
+        }
+        .profile-avatar img { width: 90px; height: 90px; object-fit: cover; }
+        .profile-info { flex: 1; min-width: 200px; }
+        .profile-name { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.3rem; color: var(--text3); }
+        .profile-email { color: var(--text2); font-size: 0.875rem; margin-bottom: 0.6rem; }
+        .profile-bio { color: var(--text); font-size: 0.9rem; margin-bottom: 0.75rem; line-height: 1.5; }
+        .profile-bio.empty { color: var(--text2); font-style: italic; }
+        .profile-stats { display: flex; gap: 1.25rem; flex-wrap: wrap; }
+        .stat { text-align: center; }
+        .stat-value { font-size: 1.3rem; font-weight: 700; color: #4a90e2; }
+        .stat-label { font-size: 0.75rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.04em; }
+        .profile-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1rem; }
+        .btn { padding: 0.5rem 1.1rem; border-radius: 7px; font-size: 0.875rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; text-decoration: none; display: inline-block; }
+        .btn-primary { background: #4a90e2; color: white; }
+        .btn-primary:hover { background: #357abd; }
+        .btn-ghost { background: var(--sticker-bg); border: 1px solid var(--sticker-border); color: var(--text); }
+        .btn-ghost:hover { border-color: #4a90e2; }
+        /* Badges */
+        .section { margin-bottom: 1.5rem; }
+        .section-title { font-size: 0.85rem; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+        .badges-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .badge-chip {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            background: var(--sticker-bg); border: 1px solid var(--sticker-border);
+            border-radius: 20px; padding: 0.3rem 0.7rem; font-size: 0.85rem; color: var(--text);
+        }
+        .badge-chip .badge-emoji { font-size: 1.1rem; }
+        .no-badges { color: var(--text2); font-size: 0.875rem; }
+        /* Whiteboard preview */
+        .board-preview {
+            background: var(--whiteboard); border-radius: 10px;
+            border: 1px solid var(--border); padding: 1.25rem;
+            min-height: 220px; position: relative; overflow: hidden;
+        }
+        .board-preview-label { font-size: 0.8rem; color: var(--text2); margin-bottom: 0.75rem; }
+        .board-sticker-preview {
+            position: absolute; background: var(--sticker-bg); border: 1px solid var(--sticker-border);
+            border-radius: 8px; padding: 0.5rem 0.6rem; font-size: 0.85rem;
+            color: var(--text); box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+        }
+        .board-sticker-preview img { max-width: 130px; max-height: 100px; border-radius: 5px; display: block; }
+        .board-sticker-preview.color-yellow { background: #fef3c7; border-color: #f59e0b; color: #78350f; }
+        .board-sticker-preview.color-blue   { background: #dbeafe; border-color: #3b82f6; color: #1e3a5f; }
+        .board-sticker-preview.color-pink   { background: #fce7f3; border-color: #ec4899; color: #831843; }
+        .board-sticker-preview.color-green  { background: #d1fae5; border-color: #10b981; color: #064e3b; }
+        .board-sticker-preview.color-purple { background: #ede9fe; border-color: #8b5cf6; color: #3b0764; }
+        .empty-board { color: var(--text2); font-size: 0.875rem; }
+        /* Edit modal */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65);
+            z-index: 1000; align-items: center; justify-content: center;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: var(--bg-solid); padding: 1.75rem; border-radius: 12px;
+            width: 90%; max-width: 420px; border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4); position: relative; max-height: 90vh; overflow-y: auto;
+        }
+        .modal-box h2 { margin: 0 0 1.25rem; font-size: 1.15rem; }
+        .close-btn { background: transparent; border: none; color: var(--text2); font-size: 1.4rem; cursor: pointer; position: absolute; top: 0.75rem; right: 0.75rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.3rem; color: var(--text2); font-size: 0.85rem; }
+        .form-input, .form-textarea {
+            width: 100%; padding: 0.65rem 0.75rem; border: 1px solid var(--input-border);
+            border-radius: 6px; background: var(--input-bg); color: var(--text); font-size: 0.9rem;
+        }
+        .form-textarea { min-height: 80px; resize: vertical; font-family: inherit; }
+        .form-input:focus, .form-textarea:focus { outline: none; border-color: #4a90e2; }
+        .notif { padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.875rem; margin-bottom: 1rem; display: none; }
+        .notif.success { background: rgba(46,204,113,0.15); color: #2ecc71; border: 1px solid rgba(46,204,113,0.3); }
+        .notif.error   { background: rgba(231,76,60,0.15);  color: #e74c3c; border: 1px solid rgba(231,76,60,0.3); }
+    </style>
+</head>
+<body>
+<script>
+(function(){
+    try { var t = localStorage.getItem('kindred_theme'); if(t) document.documentElement.setAttribute('data-theme', t); } catch(e){}
+})();
+</script>
+
+<div class="header">
+    <a href="/">&#8249; Kindred</a>
+    {% if user %}
+    <span>
+        <a href="/friends">Friends</a>
+        &nbsp;·&nbsp;
+        Signed in as {{ user.display_name or user.email.split('@')[0] }}
+    </span>
+    {% else %}
+    <a href="/signin">Sign In</a>
+    {% endif %}
+</div>
+
+<div class="container">
+    <div id="notifBar" class="notif"></div>
+
+    <!-- Profile card -->
+    <div class="profile-card">
+        <div class="profile-avatar-wrap">
+            {% if profile.avatar %}
+            <div class="profile-avatar"><img src="/uploads/{{ profile.avatar }}" alt="{{ profile.display_name }}"></div>
+            {% else %}
+            <div class="profile-avatar">{{ profile.display_name[0]|upper }}</div>
+            {% endif %}
+        </div>
+        <div class="profile-info">
+            <div class="profile-name">{{ profile.display_name }}</div>
+            <div class="profile-email">{{ profile.email }}</div>
+            <div class="profile-bio {{ 'empty' if not profile.bio }}">{{ profile.bio if profile.bio else 'No bio yet.' }}</div>
+            <div class="profile-stats">
+                <div class="stat"><div class="stat-value">🔥 {{ profile.streak }}</div><div class="stat-label">Streak</div></div>
+                <div class="stat"><div class="stat-value">{{ badges|length }}</div><div class="stat-label">Badges</div></div>
+                <div class="stat"><div class="stat-value">{{ profile.created_at[:10] if profile.created_at else '-' }}</div><div class="stat-label">Joined</div></div>
+            </div>
+            <div class="profile-actions">
+                {% if is_own %}
+                <button class="btn btn-primary" onclick="openEditModal()">Edit Profile</button>
+                {% else %}
+                {% if user %}
+                <a href="/chat/{{ profile.id }}" class="btn btn-primary">Message</a>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Badges -->
+    <div class="section">
+        <div class="section-title">Badges</div>
+        {% if badges %}
+        <div class="badges-grid">
+            {% for b in badges %}
+            <div class="badge-chip" title="{{ b.desc }}">
+                <span class="badge-emoji">{{ b.emoji }}</span>
+                <span>{{ b.name }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="no-badges">No badges earned yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- Today's board -->
+    <div class="section">
+        <div class="section-title">Today's Board</div>
+        <div class="board-preview">
+            {% if posts %}
+                {% for p in posts %}
+                <div class="board-sticker-preview {{ ('color-' + p.color) if p.color and p.color != 'default' else '' }}"
+                     style="left:{{ p.pos_left }}px;top:{{ p.pos_top }}px;width:{{ p.width }}px;">
+                    {% if p.type == 'text' %}
+                        {{ p.content }}
+                    {% else %}
+                        <img src="{{ p.content }}" alt="post">
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+            <span class="empty-board">Nothing posted today.</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Edit profile modal (only shown if is_own) -->
+{% if is_own %}
+<div class="modal-overlay" id="editModal" onclick="closeEditOnOverlay(event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <button class="close-btn" onclick="closeEditModal()">&times;</button>
+        <h2>Edit Profile</h2>
+        <div class="form-group">
+            <label>Display Name</label>
+            <input class="form-input" type="text" id="editDisplayName" value="{{ profile.display_name }}" maxlength="50">
+        </div>
+        <div class="form-group">
+            <label>Bio (max 300 chars)</label>
+            <textarea class="form-textarea" id="editBio" maxlength="300">{{ profile.bio }}</textarea>
+        </div>
+        <div class="form-group">
+            <label>Profile Picture</label>
+            <input type="file" id="avatarFileInput" accept="image/*" style="color:var(--text);font-size:0.85rem;">
+        </div>
+        <button class="btn btn-primary" style="width:100%;" onclick="saveProfile()">Save Changes</button>
+    </div>
+</div>
+<script>
+function openEditModal() { document.getElementById('editModal').classList.add('show'); }
+function closeEditModal() { document.getElementById('editModal').classList.remove('show'); }
+function closeEditOnOverlay(e) { if (e.target.id === 'editModal') closeEditModal(); }
+function showNotif(msg, type) {
+    var el = document.getElementById('notifBar');
+    el.textContent = msg; el.className = 'notif ' + (type || 'success'); el.style.display = 'block';
+    setTimeout(function() { el.style.display = 'none'; }, 4000);
+}
+function saveProfile() {
+    var dn = document.getElementById('editDisplayName').value.trim();
+    var bio = document.getElementById('editBio').value.trim();
+    var file = document.getElementById('avatarFileInput').files[0];
+    var doSave = function() {
+        fetch('/api/profile/update', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ display_name: dn, bio: bio })
+        }).then(function(r) { return r.json(); }).then(function(d) {
+            if (d.ok) { closeEditModal(); showNotif('Profile updated!'); setTimeout(function(){ location.reload(); }, 1200); }
+            else showNotif(d.error || 'Failed to update', 'error');
+        });
+    };
+    if (file) {
+        var fd = new FormData(); fd.append('file', file);
+        fetch('/api/avatar/upload', { method: 'POST', body: fd }).then(function() { doSave(); });
+    } else { doSave(); }
+}
+</script>
+{% endif %}
+</body>
+</html>

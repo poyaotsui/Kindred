@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friends - Kindred</title>
+    <style>
+        :root[data-theme="dark"] {
+            --bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --bg-solid: #1a1a2e; --surface: rgba(0,0,0,0.25); --surface2: rgba(0,0,0,0.3);
+            --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.06);
+            --text: #eee; --text2: #aaa; --text3: rgba(255,255,255,0.9);
+            --sticker-bg: rgba(255,255,255,0.1); --sticker-border: rgba(255,255,255,0.18);
+        }
+        :root[data-theme="light"] {
+            --bg: linear-gradient(135deg, #e8f4fd 0%, #dbeafe 100%);
+            --bg-solid: #f0f4f8; --surface: rgba(255,255,255,0.6); --surface2: rgba(255,255,255,0.8);
+            --border: rgba(0,0,0,0.1); --border2: rgba(0,0,0,0.06);
+            --text: #1a1a2e; --text2: #555; --text3: #1a1a2e;
+            --sticker-bg: rgba(0,0,0,0.05); --sticker-border: rgba(0,0,0,0.12);
+        }
+        * { box-sizing: border-box; }
+        body { font-family: system-ui,-apple-system,sans-serif; margin: 0; min-height: 100vh; background: var(--bg); color: var(--text); }
+        .header {
+            background: var(--surface2); padding: 0.9rem 1.5rem;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+        .header a { color: #4a90e2; text-decoration: none; font-size: 0.9rem; }
+        .header a:hover { text-decoration: underline; }
+        .container { max-width: 700px; margin: 0 auto; padding: 2rem 1.5rem; }
+        h1 { margin: 0 0 0.4rem; }
+        .subtitle { color: var(--text2); font-size: 0.9rem; margin-bottom: 1.75rem; }
+        .friend-list { display: flex; flex-direction: column; gap: 0.7rem; }
+        .friend-card {
+            display: flex; align-items: center; gap: 1rem;
+            padding: 1rem 1.1rem; background: var(--surface);
+            border-radius: 10px; border: 1px solid var(--border2);
+            transition: border-color 0.2s;
+        }
+        .friend-card:hover { border-color: var(--border); }
+        .friend-avatar {
+            width: 48px; height: 48px; border-radius: 50%; background: #4a90e2;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1.2rem; color: white; overflow: hidden; flex-shrink: 0;
+        }
+        .friend-avatar img { width: 48px; height: 48px; object-fit: cover; }
+        .friend-info { flex: 1; min-width: 0; }
+        .friend-name { font-weight: 600; font-size: 1rem; color: var(--text3); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+        .friend-email { color: var(--text2); font-size: 0.85rem; margin-top: 1px; }
+        .streak-pill {
+            display: inline-flex; align-items: center; gap: 0.25rem;
+            font-size: 0.8rem; font-weight: 600;
+            background: rgba(245,158,11,0.12); color: #f59e0b;
+            border: 1px solid rgba(245,158,11,0.25); border-radius: 12px;
+            padding: 1px 8px;
+        }
+        .checkin-dot {
+            width: 8px; height: 8px; border-radius: 50%; background: #2ecc71;
+            display: inline-block; flex-shrink: 0;
+        }
+        .checkin-dot.off { background: var(--sticker-border); }
+        .friend-actions { display: flex; gap: 0.5rem; align-items: center; flex-shrink: 0; flex-wrap: wrap; }
+        .btn-sm {
+            padding: 0.35rem 0.75rem; border-radius: 7px; font-size: 0.8rem;
+            font-weight: 600; cursor: pointer; border: none; text-decoration: none;
+            display: inline-block; transition: all 0.2s;
+        }
+        .btn-msg { background: #4a90e2; color: white; }
+        .btn-msg:hover { background: #357abd; }
+        .btn-profile { background: var(--sticker-bg); border: 1px solid var(--sticker-border); color: var(--text); }
+        .btn-profile:hover { border-color: #4a90e2; }
+        .unread-badge {
+            background: #e74c3c; color: white; border-radius: 50%;
+            width: 18px; height: 18px; font-size: 0.65rem; font-weight: 700;
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+        .empty-state { color: var(--text2); text-align: center; padding: 3rem; font-size: 0.95rem; }
+        .empty-state a { color: #4a90e2; }
+    </style>
+</head>
+<body>
+<script>
+(function(){
+    try { var t = localStorage.getItem('kindred_theme'); if(t) document.documentElement.setAttribute('data-theme', t); } catch(e){}
+})();
+</script>
+
+<div class="header">
+    <a href="/">&#8249; Kindred</a>
+    <span>
+        <a href="/leaderboard">Leaderboard</a>
+        &nbsp;·&nbsp;
+        <a href="/users">Community</a>
+    </span>
+</div>
+
+<div class="container">
+    <h1>Friends</h1>
+    <p class="subtitle">People you're connected with</p>
+
+    {% if friends %}
+    <div class="friend-list">
+        {% for f in friends %}
+        <div class="friend-card">
+            {% if f.avatar %}
+            <div class="friend-avatar"><img src="/uploads/{{ f.avatar }}" alt="{{ f.display_name }}"></div>
+            {% else %}
+            <div class="friend-avatar">{{ f.display_name[0]|upper if f.display_name else '?' }}</div>
+            {% endif %}
+            <div class="friend-info">
+                <div class="friend-name">
+                    {{ f.display_name }}
+                    <span class="streak-pill">🔥 {{ f.streak }}</span>
+                    <span class="checkin-dot {{ '' if f.checked_in_today else 'off' }}" title="{{ 'Checked in today' if f.checked_in_today else 'Not checked in today' }}"></span>
+                </div>
+                <div class="friend-email">{{ f.email }}</div>
+            </div>
+            <div class="friend-actions">
+                <a href="/chat/{{ f.id }}" class="btn-sm btn-msg">
+                    Message
+                    {% if f.unread > 0 %}<span class="unread-badge">{{ f.unread }}</span>{% endif %}
+                </a>
+                <a href="/profile/{{ f.display_name }}" class="btn-sm btn-profile">Profile</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        You don't have any friends yet.<br>
+        <a href="/users">Visit the Community</a> to add friends.
+    </div>
+    {% endif %}
+</div>
+</body>
+</html>

@@ -1,4 +1,7 @@
 PyQt6==6.6.1
 yfinance==0.2.36
 pandas==2.2.0
-matplotlib==3.8.2 
+matplotlib==3.8.2
+flask>=3.0.0
+gunicorn>=21.0.0
+werkzeug>=3.0.0
