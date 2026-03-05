@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Kindred</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #eee;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .auth-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        h1 { margin-top: 0; text-align: center; font-size: 1.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.35rem; color: #aaa; font-size: 0.9rem; }
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 1rem;
+        }
+        input:focus { outline: none; border-color: #4a90e2; }
+        input::placeholder { color: rgba(255, 255, 255, 0.5); }
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+        .btn:hover { background: #357abd; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .error { color: #e74c3c; font-size: 0.9rem; margin-top: 0.5rem; }
+        .back-link { color: #4a90e2; text-decoration: none; font-size: 0.9rem; display: inline-block; margin-top: 1rem; }
+        .back-link:hover { text-decoration: underline; }
+        .signin-link { text-align: center; margin-top: 1.5rem; }
+        .signin-link a { color: #4a90e2; text-decoration: none; }
+        .signin-link a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="auth-card">
+        <h1>Sign Up</h1>
+        <p style="color:#aaa;text-align:center;font-size:0.9rem;margin-bottom:1.5rem;">Use your Gmail account and phone number</p>
+
+        <form id="signupForm" onsubmit="doSignup(event)">
+            <div class="form-group">
+                <label>Gmail address</label>
+                <input type="email" name="email" placeholder="you@gmail.com" required>
+            </div>
+            <div class="form-group">
+                <label>Phone number</label>
+                <input type="tel" name="phone" placeholder="(555) 123-4567" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="At least 6 characters" required minlength="6">
+            </div>
+            <div id="err" class="error"></div>
+            <button type="submit" class="btn" id="btnSubmit">Create Account</button>
+        </form>
+
+        <div class="signin-link">
+            Already have an account? <a href="/signin">Sign in</a>
+        </div>
+        <div style="text-align:center;margin-top:1rem;">
+            <a href="/" class="back-link">← Back to Kindred</a>
+        </div>
+    </div>
+
+    <script>
+        function doSignup(e) {
+            e.preventDefault();
+            var form = document.getElementById('signupForm');
+            var email = form.email.value.trim().toLowerCase();
+            var phone = form.phone.value;
+            var password = form.password.value;
+            var err = document.getElementById('err');
+            var btn = document.getElementById('btnSubmit');
+            err.textContent = '';
+            if (!email.endsWith('@gmail.com')) {
+                err.textContent = 'Please use a Gmail account (@gmail.com)';
+                return;
+            }
+            btn.disabled = true;
+            btn.textContent = 'Creating account...';
+            fetch('/api/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email, phone: phone, password: password })
+            }).then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
+            .then(function(res) {
+                btn.disabled = false;
+                btn.textContent = 'Create Account';
+                if (res.ok) {
+                    window.location.href = res.data.redirect || '/';
+                } else {
+                    err.textContent = res.data.error || 'Sign up failed';
+                }
+            }).catch(function() {
+                btn.disabled = false;
+                btn.textContent = 'Create Account';
+                err.textContent = 'Network error. Please try again.';
+            });
+        }
+    </script>
+</body>
+</html>

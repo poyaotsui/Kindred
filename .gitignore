@@ -1,0 +1,9 @@
+.DS_Store
+.idea/
+.claude/
+__pycache__/
+*.pyc
+*.pyo
+*.db
+*.sqlite3
+webapp/static/uploads/
