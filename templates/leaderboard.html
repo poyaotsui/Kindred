@@ -28,37 +28,50 @@
         }
         .header a { color: #4a90e2; text-decoration: none; font-size: 0.9rem; }
         .header a:hover { text-decoration: underline; }
-        .container { max-width: 640px; margin: 0 auto; padding: 2rem 1.5rem; }
-        h1 { margin: 0 0 0.4rem; font-size: 1.6rem; }
-        .subtitle { color: var(--text2); font-size: 0.9rem; margin-bottom: 2rem; }
-        .lb-list { display: flex; flex-direction: column; gap: 0.6rem; }
+        .container { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; }
+        h1 { margin: 0 0 0.3rem; font-size: 1.55rem; }
+        .subtitle { color: var(--text2); font-size: 0.875rem; margin-bottom: 1.5rem; }
+        /* Sort tabs */
+        .sort-tabs { display: flex; gap: 0.4rem; margin-bottom: 1.25rem; }
+        .sort-tab { padding: 0.35rem 0.8rem; background: var(--sticker-bg); border: 1px solid var(--sticker-border); border-radius: 6px; color: var(--text); cursor: pointer; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+        .sort-tab.active { background: #4a90e2; border-color: #4a90e2; color: white; }
+        /* List */
+        .lb-list { display: flex; flex-direction: column; gap: 0.55rem; }
         .lb-entry {
-            display: flex; align-items: center; gap: 1rem;
+            display: flex; align-items: center; gap: 0.9rem;
             background: var(--surface); border: 1px solid var(--border2);
-            border-radius: 10px; padding: 0.9rem 1.1rem;
+            border-radius: 10px; padding: 0.85rem 1rem;
             transition: border-color 0.2s;
         }
         .lb-entry.is-you { border-color: rgba(74,144,226,0.4); background: rgba(74,144,226,0.06); }
         .lb-entry:hover { border-color: var(--border); }
-        .rank { font-size: 1.25rem; font-weight: 800; min-width: 2.2rem; text-align: center; }
+        .rank { font-size: 1.2rem; font-weight: 800; min-width: 2rem; text-align: center; }
         .rank.gold   { color: #f59e0b; }
         .rank.silver { color: #9ca3af; }
         .rank.bronze { color: #b45309; }
-        .rank.other  { color: var(--text2); font-size: 1rem; }
+        .rank.other  { color: var(--text2); font-size: 0.95rem; }
         .lb-avatar {
-            width: 44px; height: 44px; border-radius: 50%; background: #4a90e2;
+            width: 42px; height: 42px; border-radius: 50%; background: #4a90e2;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.1rem; font-weight: 700; color: white; overflow: hidden; flex-shrink: 0;
+            font-size: 1rem; font-weight: 700; color: white; overflow: hidden; flex-shrink: 0;
         }
-        .lb-avatar img { width: 44px; height: 44px; object-fit: cover; }
+        .lb-avatar img { width: 42px; height: 42px; object-fit: cover; }
         .lb-info { flex: 1; min-width: 0; }
-        .lb-name { font-weight: 600; font-size: 1rem; color: var(--text3); display: flex; align-items: center; gap: 0.4rem; }
-        .you-tag { font-size: 0.7rem; background: rgba(74,144,226,0.25); color: #4a90e2; border-radius: 4px; padding: 1px 6px; font-weight: 600; }
-        .lb-badges { font-size: 1rem; margin-top: 2px; }
-        .lb-streak { display: flex; align-items: center; gap: 0.3rem; font-size: 1.2rem; font-weight: 700; color: #f59e0b; white-space: nowrap; }
-        .lb-streak span { font-size: 0.8rem; color: var(--text2); font-weight: 400; }
-        .lb-profile-link { color: #4a90e2; text-decoration: none; font-size: 0.8rem; }
+        .lb-name { font-weight: 600; font-size: 0.95rem; color: var(--text3); display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap; }
+        .you-tag { font-size: 0.68rem; background: rgba(74,144,226,0.25); color: #4a90e2; border-radius: 4px; padding: 1px 6px; font-weight: 600; }
+        .lb-badges { font-size: 0.9rem; margin-top: 1px; }
+        .lb-profile-link { color: #4a90e2; text-decoration: none; font-size: 0.78rem; }
         .lb-profile-link:hover { text-decoration: underline; }
+        /* Stats column */
+        .lb-stats { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+        .stat-pill {
+            display: flex; align-items: center; gap: 0.25rem;
+            font-size: 0.82rem; font-weight: 700; white-space: nowrap;
+        }
+        .stat-pill.streak { color: #f59e0b; }
+        .stat-pill.longest { color: #8b5cf6; }
+        .stat-pill.total { color: #4a90e2; }
+        .stat-sub { font-size: 0.68rem; color: var(--text2); font-weight: 400; }
         .empty-state { color: var(--text2); text-align: center; padding: 3rem 0; font-size: 0.95rem; }
     </style>
 </head>
@@ -80,18 +93,23 @@
 
 <div class="container">
     <h1>Leaderboard</h1>
-    <p class="subtitle">You and your friends ranked by current check-in streak.</p>
+    <p class="subtitle">You and your friends ranked by stats.</p>
+
+    <div class="sort-tabs">
+        <button class="sort-tab active" onclick="sortBy('streak', this)">🔥 Current Streak</button>
+        <button class="sort-tab" onclick="sortBy('longest', this)">⚡ Best Streak</button>
+        <button class="sort-tab" onclick="sortBy('total', this)">📅 Total Check-ins</button>
+    </div>
 
     {% if entries %}
-    <div class="lb-list">
+    <div class="lb-list" id="lbList">
         {% for entry in entries %}
-        {% set rank_num = loop.index %}
-        <div class="lb-entry {{ 'is-you' if entry.is_you else '' }}">
-            <div class="rank {{ 'gold' if rank_num == 1 else ('silver' if rank_num == 2 else ('bronze' if rank_num == 3 else 'other')) }}">
-                {% if rank_num == 1 %}🥇
-                {% elif rank_num == 2 %}🥈
-                {% elif rank_num == 3 %}🥉
-                {% else %}{{ rank_num }}{% endif %}
+        <div class="lb-entry {{ 'is-you' if entry.is_you else '' }}"
+             data-streak="{{ entry.streak }}"
+             data-longest="{{ entry.longest_streak }}"
+             data-total="{{ entry.total_checkins }}">
+            <div class="rank {{ 'gold' if loop.index == 1 else ('silver' if loop.index == 2 else ('bronze' if loop.index == 3 else 'other')) }}">
+                {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% elif loop.index == 3 %}🥉{% else %}{{ loop.index }}{% endif %}
             </div>
             {% if entry.avatar %}
             <div class="lb-avatar"><img src="/uploads/{{ entry.avatar }}" alt="{{ entry.display_name }}"></div>
@@ -103,13 +121,13 @@
                     {{ entry.display_name }}
                     {% if entry.is_you %}<span class="you-tag">You</span>{% endif %}
                 </div>
-                <div class="lb-badges">
-                    {% for b in entry.badges %}{{ b.emoji }}{% endfor %}
-                </div>
+                <div class="lb-badges">{% for b in entry.badges %}{{ b.emoji }}{% endfor %}</div>
                 <a href="/profile/{{ entry.display_name }}" class="lb-profile-link">View profile</a>
             </div>
-            <div class="lb-streak">
-                🔥 {{ entry.streak }} <span>day streak</span>
+            <div class="lb-stats">
+                <div class="stat-pill streak">🔥 {{ entry.streak }} <span class="stat-sub">streak</span></div>
+                <div class="stat-pill longest">⚡ {{ entry.longest_streak }} <span class="stat-sub">best</span></div>
+                <div class="stat-pill total">📅 {{ entry.total_checkins }} <span class="stat-sub">total</span></div>
             </div>
         </div>
         {% endfor %}
@@ -118,5 +136,28 @@
     <div class="empty-state">Add friends to see them on the leaderboard!</div>
     {% endif %}
 </div>
+
+<script>
+var SORT_FIELD = 'streak';
+function sortBy(field, btn) {
+    SORT_FIELD = field;
+    document.querySelectorAll('.sort-tab').forEach(function(t) { t.classList.remove('active'); });
+    btn.classList.add('active');
+    var list = document.getElementById('lbList');
+    if (!list) return;
+    var entries = Array.from(list.children);
+    entries.sort(function(a, b) { return parseInt(b.getAttribute('data-' + field)) - parseInt(a.getAttribute('data-' + field)); });
+    entries.forEach(function(el, i) {
+        list.appendChild(el);
+        // Update rank display
+        var rankEl = el.querySelector('.rank');
+        if (rankEl) {
+            var medals = ['🥇','🥈','🥉'];
+            rankEl.className = 'rank ' + (i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : 'other');
+            rankEl.textContent = i < 3 ? medals[i] : (i + 1).toString();
+        }
+    });
+}
+</script>
 </body>
 </html>

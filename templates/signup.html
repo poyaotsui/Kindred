@@ -56,8 +56,6 @@
         .btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .error { color: #e74c3c; font-size: 0.9rem; margin-top: 0.5rem; }
         .success { color: #2ecc71; font-size: 0.9rem; margin-top: 0.5rem; }
-        .step { display: none; }
-        .step.active { display: block; }
         .back-link { color: #4a90e2; text-decoration: none; font-size: 0.9rem; display: inline-block; margin-top: 1rem; }
         .back-link:hover { text-decoration: underline; }
         .signin-link { text-align: center; margin-top: 1.5rem; }
@@ -70,37 +68,22 @@
         <h1>Sign Up</h1>
         <p style="color:#aaa;text-align:center;font-size:0.9rem;margin-bottom:1.5rem;">Use your Gmail account and phone number</p>
 
-        <div id="step1" class="step active">
-            <form id="form1" onsubmit="sendCode(event)">
-                <div class="form-group">
-                    <label>Gmail address</label>
-                    <input type="email" name="email" placeholder="you@gmail.com" required>
-                </div>
-                <div class="form-group">
-                    <label>Phone number</label>
-                    <input type="tel" name="phone" placeholder="(555) 123-4567" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" name="password" placeholder="At least 6 characters" required minlength="6">
-                </div>
-                <div id="err1" class="error"></div>
-                <button type="submit" class="btn" id="btnSend">Send verification code</button>
-            </form>
-        </div>
-
-        <div id="step2" class="step">
-            <p style="color:#aaa;font-size:0.9rem;">We sent a 6-digit code to your phone. Enter it below.</p>
-            <form id="form2" onsubmit="verifyAndSignup(event)">
-                <div class="form-group">
-                    <label>Verification code</label>
-                    <input type="text" name="code" placeholder="000000" maxlength="6" pattern="[0-9]{6}" required>
-                </div>
-                <div id="err2" class="error"></div>
-                <button type="submit" class="btn" id="btnVerify">Verify and create account</button>
-            </form>
-            <a href="#" class="back-link" onclick="showStep(1); return false;">← Back to change details</a>
-        </div>
+        <form id="signupForm" onsubmit="doSignup(event)">
+            <div class="form-group">
+                <label>Gmail address</label>
+                <input type="email" name="email" placeholder="you@gmail.com" required>
+            </div>
+            <div class="form-group">
+                <label>Phone number</label>
+                <input type="tel" name="phone" placeholder="(555) 123-4567" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="At least 6 characters" required minlength="6">
+            </div>
+            <div id="err" class="error"></div>
+            <button type="submit" class="btn" id="btnSignup">Create account</button>
+        </form>
 
         <div class="signin-link">
             Already have an account? <a href="/signin">Sign in</a>
@@ -111,85 +94,37 @@
     </div>
 
     <script>
-        var signupData = {};
-        function showStep(n) {
-            document.querySelectorAll('.step').forEach(function(el) { el.classList.remove('active'); });
-            document.getElementById('step' + n).classList.add('active');
-        }
-        function sendCode(e) {
+        function doSignup(e) {
             e.preventDefault();
-            if (window.location.protocol === 'file:') {
-                document.getElementById('err1').textContent = 'Please run the app from the server: open http://127.0.0.1:5000 in your browser after running python webapp/app.py';
-                return;
-            }
-            var form = document.getElementById('form1');
+            var form = document.getElementById('signupForm');
             var email = form.email.value.trim().toLowerCase();
             var phone = form.phone.value;
             var password = form.password.value;
-            var err = document.getElementById('err1');
-            var btn = document.getElementById('btnSend');
+            var err = document.getElementById('err');
+            var btn = document.getElementById('btnSignup');
             err.textContent = '';
             if (!email.endsWith('@gmail.com')) {
                 err.textContent = 'Please use a Gmail account (@gmail.com)';
                 return;
             }
             btn.disabled = true;
-            btn.textContent = 'Sending...';
-            fetch('/api/send-verification', {
+            btn.textContent = 'Creating account...';
+            fetch('/api/signup', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: email, phone: phone })
+                body: JSON.stringify({ email: email, phone: phone, password: password })
             }).then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
             .then(function(res) {
                 btn.disabled = false;
-                btn.textContent = 'Send verification code';
-                if (res.ok) {
-                    signupData = { email: email, phone: phone, password: password };
-                    showStep(2);
-                    document.getElementById('form2').code.focus();
-                } else {
-                    err.textContent = res.data.error || 'Failed to send code';
-                }
-            }).catch(function() {
-                btn.disabled = false;
-                btn.textContent = 'Send verification code';
-                err.textContent = 'Network error. Please try again.';
-            });
-        }
-        function verifyAndSignup(e) {
-            e.preventDefault();
-            var form = document.getElementById('form2');
-            var code = form.code.value.trim();
-            var err = document.getElementById('err2');
-            var btn = document.getElementById('btnVerify');
-            err.textContent = '';
-            if (code.length !== 6) {
-                err.textContent = 'Please enter the 6-digit code';
-                return;
-            }
-            btn.disabled = true;
-            btn.textContent = 'Verifying...';
-            fetch('/api/verify-and-signup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: signupData.email,
-                    phone: signupData.phone,
-                    password: signupData.password,
-                    code: code
-                })
-            }).then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
-            .then(function(res) {
-                btn.disabled = false;
-                btn.textContent = 'Verify and create account';
+                btn.textContent = 'Create account';
                 if (res.ok) {
                     window.location.href = res.data.redirect || '/';
                 } else {
-                    err.textContent = res.data.error || 'Verification failed';
+                    err.textContent = res.data.error || 'Sign up failed';
                 }
             }).catch(function() {
                 btn.disabled = false;
-                btn.textContent = 'Verify and create account';
+                btn.textContent = 'Create account';
                 err.textContent = 'Network error. Please try again.';
             });
         }

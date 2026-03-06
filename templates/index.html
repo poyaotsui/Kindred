@@ -8,378 +8,220 @@
     <style>
         :root[data-theme="dark"] {
             --bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            --bg-solid: #1a1a2e;
-            --surface: rgba(0,0,0,0.25);
-            --surface2: rgba(0,0,0,0.3);
-            --border: rgba(255,255,255,0.1);
-            --border2: rgba(255,255,255,0.08);
-            --text: #eee;
-            --text2: #aaa;
-            --text3: rgba(255,255,255,0.9);
-            --sticker-bg: rgba(255,255,255,0.12);
-            --sticker-border: rgba(255,255,255,0.25);
-            --sticker-text: #dfe6e9;
-            --input-bg: rgba(255,255,255,0.05);
-            --input-border: rgba(255,255,255,0.2);
-            --whiteboard: #2d3436;
+            --bg-solid: #1a1a2e; --surface: rgba(0,0,0,0.25); --surface2: rgba(0,0,0,0.3);
+            --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.08);
+            --text: #eee; --text2: #aaa; --text3: rgba(255,255,255,0.9);
+            --sticker-bg: rgba(255,255,255,0.12); --sticker-border: rgba(255,255,255,0.25); --sticker-text: #dfe6e9;
+            --input-bg: rgba(255,255,255,0.05); --input-border: rgba(255,255,255,0.2);
+            --whiteboard: #2d3436; --cal-active: #4a90e2;
         }
         :root[data-theme="light"] {
             --bg: linear-gradient(135deg, #e8f4fd 0%, #dbeafe 100%);
-            --bg-solid: #e8f4fd;
-            --surface: rgba(255,255,255,0.6);
-            --surface2: rgba(255,255,255,0.8);
-            --border: rgba(0,0,0,0.1);
-            --border2: rgba(0,0,0,0.06);
-            --text: #1a1a2e;
-            --text2: #555;
-            --text3: #1a1a2e;
-            --sticker-bg: rgba(255,255,255,0.9);
-            --sticker-border: rgba(0,0,0,0.15);
-            --sticker-text: #2d3436;
-            --input-bg: rgba(255,255,255,0.8);
-            --input-border: rgba(0,0,0,0.2);
-            --whiteboard: #f0f4f8;
+            --bg-solid: #e8f4fd; --surface: rgba(255,255,255,0.6); --surface2: rgba(255,255,255,0.8);
+            --border: rgba(0,0,0,0.1); --border2: rgba(0,0,0,0.06);
+            --text: #1a1a2e; --text2: #555; --text3: #1a1a2e;
+            --sticker-bg: rgba(255,255,255,0.9); --sticker-border: rgba(0,0,0,0.15); --sticker-text: #2d3436;
+            --input-bg: rgba(255,255,255,0.8); --input-border: rgba(0,0,0,0.2);
+            --whiteboard: #f0f4f8; --cal-active: #4a90e2;
         }
         * { box-sizing: border-box; }
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-            margin: 0; min-height: 100vh;
-            display: flex; flex-direction: column;
-            background: var(--bg); color: var(--text);
-            transition: background 0.3s, color 0.3s;
-        }
+        body { font-family: system-ui,-apple-system,sans-serif; margin: 0; min-height: 100vh; display: flex; flex-direction: column; background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; }
         /* --- Menu Bar --- */
-        .menu-bar {
-            font-family: inherit;
-            background: var(--surface2);
-            padding: 1rem 1.5rem;
-            display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid var(--border);
-            gap: 0.75rem; flex-wrap: wrap;
-        }
-        .menu-bar-left { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+        .menu-bar { background: var(--surface2); padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); gap: 0.75rem; flex-wrap: wrap; }
+        .menu-bar-left { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
         .site-name { font-size: 1.2rem; font-weight: 700; color: var(--text3); }
-        .streak-display { display: flex; align-items: center; gap: 0.3rem; font-size: 1rem; font-weight: 600; color: var(--text); position: relative; }
-        .freeze-badge {
-            font-size: 0.7rem; background: #4a90e2; color: white;
-            border-radius: 4px; padding: 1px 5px; margin-left: 2px; cursor: pointer;
-            title: "Streak freezes available";
-        }
-        .menu-bar-right { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
-        .btn-ghost {
-            background: transparent; border: 1px solid var(--border);
-            color: var(--text); padding: 0.35rem 0.75rem;
-            border-radius: 6px; font-size: 0.875rem; font-weight: 500;
-            cursor: pointer; text-decoration: none; transition: all 0.2s;
-        }
-        .btn-ghost:hover { background: var(--sticker-bg); }
-        .user-icon-btn {
-            background: var(--sticker-bg); border: 2px solid var(--sticker-border);
-            color: var(--text); width: 44px; height: 44px; border-radius: 50%;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 1.3rem; transition: all 0.2s; overflow: hidden; padding: 0;
-        }
-        .user-icon-btn img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
+        .streak-display { display: flex; align-items: center; gap: 0.3rem; font-size: 0.95rem; font-weight: 600; }
+        .freeze-badge { font-size: 0.7rem; background: #4a90e2; color: white; border-radius: 4px; padding: 1px 5px; margin-left: 2px; cursor: pointer; }
+        .menu-bar-right { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+        .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 0.3rem 0.7rem; border-radius: 6px; font-size: 0.85rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.3rem; }
+        .btn-ghost:hover { background: var(--sticker-bg); border-color: #4a90e2; }
+        .theme-btn { background: var(--sticker-bg); border: 1px solid var(--sticker-border); color: var(--text); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .theme-btn:hover { border-color: #4a90e2; }
+        .user-icon-btn { background: var(--sticker-bg); border: 2px solid var(--sticker-border); color: var(--text); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all 0.2s; overflow: hidden; padding: 0; }
+        .user-icon-btn img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
         .user-icon-btn:hover { border-color: #4a90e2; }
         .user-dropdown { position: relative; }
-        .user-dropdown-menu {
-            display: none; position: absolute; top: 110%; right: 0;
-            background: var(--bg-solid); border: 1px solid var(--border);
-            border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-            min-width: 180px; z-index: 200; overflow: hidden;
-        }
+        .user-dropdown-menu { display: none; position: absolute; top: 110%; right: 0; background: var(--bg-solid); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); min-width: 185px; z-index: 200; overflow: hidden; }
         .user-dropdown-menu.show { display: block; }
-        .user-dropdown-menu a, .user-dropdown-menu button {
-            display: block; padding: 0.7rem 1rem; color: var(--text);
-            text-decoration: none; font-size: 0.9rem; transition: background 0.2s;
-            background: none; border: none; width: 100%; text-align: left; cursor: pointer;
-        }
+        .user-dropdown-menu a, .user-dropdown-menu button { display: block; padding: 0.65rem 1rem; color: var(--text); text-decoration: none; font-size: 0.875rem; transition: background 0.2s; background: none; border: none; width: 100%; text-align: left; cursor: pointer; }
         .user-dropdown-menu a:hover, .user-dropdown-menu button:hover { background: var(--sticker-bg); }
         .user-dropdown-menu .sign-out { color: #e74c3c; }
         .user-dropdown-menu .divider { height: 1px; background: var(--border); margin: 0.25rem 0; }
-        .unread-dot {
-            width: 8px; height: 8px; background: #e74c3c;
-            border-radius: 50%; display: inline-block; margin-left: 4px;
-        }
+        .unread-dot { width: 7px; height: 7px; background: #e74c3c; border-radius: 50%; display: inline-block; margin-left: 3px; }
+        /* Notifications bell */
+        .notif-bell-wrap { position: relative; }
+        .notif-bell { background: var(--sticker-bg); border: 1px solid var(--sticker-border); color: var(--text); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .notif-bell:hover { border-color: #4a90e2; }
+        .notif-count { position: absolute; top: -4px; right: -4px; background: #e74c3c; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 0.6rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+        .friend-checkin-badge { position: absolute; top: -6px; right: -6px; background: #2ecc71; color: white; border-radius: 50%; width: 17px; height: 17px; font-size: 0.62rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
         .checkin-btn-wrap { position: relative; }
-        .friend-checkin-badge {
-            position: absolute; top: -6px; right: -6px;
-            background: #2ecc71; color: white; border-radius: 50%;
-            width: 18px; height: 18px; font-size: 0.65rem; font-weight: 700;
-            display: flex; align-items: center; justify-content: center;
-        }
-        /* --- Theme toggle --- */
-        .theme-btn {
-            background: var(--sticker-bg); border: 1px solid var(--sticker-border);
-            color: var(--text); width: 36px; height: 36px; border-radius: 50%;
-            cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s;
-        }
-        .theme-btn:hover { border-color: #4a90e2; }
-        /* --- Content layout --- */
+        /* --- Layout --- */
         .content { flex: 1; display: flex; flex-direction: row; align-items: stretch; min-height: 0; }
         /* --- Sidebar --- */
-        .sidebar {
-            width: 260px; min-width: 260px; background: var(--surface);
-            border-right: 1px solid var(--border2); padding: 1.25rem;
-            overflow-y: auto; display: flex; flex-direction: column; gap: 1.5rem;
-        }
-        .sidebar h3 { margin: 0 0 0.75rem; font-size: 0.9rem; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; }
-        .check-in-dates-list { list-style: none; padding: 0; margin: 0; }
-        .check-in-dates-list li {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0.4rem 0; border-bottom: 1px solid var(--border2);
-            font-size: 0.85rem; color: var(--text);
-        }
-        .check-in-dates-list li::before { content: "✓"; color: #4a90e2; font-weight: bold; margin-right: 6px; }
-        .check-in-count { color: #4a90e2; font-weight: 600; font-size: 0.8rem; }
-        .badges-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-        .badge-chip {
-            font-size: 1.3rem; cursor: default; position: relative;
-            display: inline-flex; align-items: center;
-        }
-        .badge-chip .badge-tooltip {
-            display: none; position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%);
-            background: var(--bg-solid); border: 1px solid var(--border); border-radius: 6px;
-            padding: 0.4rem 0.6rem; font-size: 0.75rem; white-space: nowrap; z-index: 100;
-            color: var(--text); pointer-events: none; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
+        .sidebar { width: 250px; min-width: 250px; background: var(--surface); border-right: 1px solid var(--border2); padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1.25rem; }
+        .sidebar h3 { margin: 0 0 0.6rem; font-size: 0.8rem; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; }
+        /* Calendar */
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+        .cal-day { width: 100%; aspect-ratio: 1; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; background: var(--surface); border: 1px solid var(--border2); cursor: default; position: relative; }
+        .cal-day.checked { background: var(--cal-active); border-color: var(--cal-active); color: white; }
+        .cal-day .cal-mood { position: absolute; bottom: 1px; right: 1px; font-size: 0.5rem; line-height: 1; }
+        .cal-header { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; margin-bottom: 3px; }
+        .cal-header span { text-align: center; font-size: 0.65rem; color: var(--text2); font-weight: 600; }
+        /* Badges */
+        .badges-row { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+        .badge-chip { font-size: 1.2rem; cursor: default; position: relative; display: inline-flex; align-items: center; }
+        .badge-chip .badge-tooltip { display: none; position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%); background: var(--bg-solid); border: 1px solid var(--border); border-radius: 6px; padding: 0.35rem 0.6rem; font-size: 0.7rem; white-space: nowrap; z-index: 100; color: var(--text); pointer-events: none; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
         .badge-chip:hover .badge-tooltip { display: block; }
-        .badge-chip.locked { opacity: 0.3; filter: grayscale(1); }
-        /* --- Main content area --- */
-        .content-main {
-            flex: 1; display: flex; flex-direction: column;
-            padding: 1.25rem; min-height: 0; overflow: auto; gap: 1.25rem;
-        }
-        /* --- Board header --- */
-        .board-header {
-            display: flex; align-items: center; justify-content: space-between;
-            flex-wrap: wrap; gap: 0.5rem;
-        }
-        .board-header-left { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
-        .board-date-nav { display: flex; align-items: center; gap: 0.4rem; }
-        .board-date-nav button {
-            background: var(--sticker-bg); border: 1px solid var(--sticker-border);
-            color: var(--text); width: 30px; height: 30px; border-radius: 6px;
-            cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center;
-        }
+        /* Challenges */
+        .challenge-item { margin-bottom: 0.6rem; }
+        .challenge-title { font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 0.3rem; margin-bottom: 3px; }
+        .challenge-bar-wrap { background: var(--border2); border-radius: 4px; height: 6px; overflow: hidden; }
+        .challenge-bar { height: 100%; background: #4a90e2; border-radius: 4px; transition: width 0.4s; }
+        .challenge-bar.done { background: #2ecc71; }
+        .challenge-label { font-size: 0.7rem; color: var(--text2); margin-top: 2px; }
+        /* --- Content main --- */
+        .content-main { flex: 1; display: flex; flex-direction: column; padding: 1.1rem; min-height: 0; overflow: auto; gap: 1rem; }
+        /* Board header */
+        .board-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+        .board-header-left { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+        .board-date-nav { display: flex; align-items: center; gap: 0.35rem; }
+        .board-date-nav button { background: var(--sticker-bg); border: 1px solid var(--sticker-border); color: var(--text); width: 28px; height: 28px; border-radius: 6px; cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; }
         .board-date-nav button:hover { background: rgba(74,144,226,0.2); }
-        .board-date-label {
-            font-size: 0.9rem; font-weight: 600; color: var(--text);
-            padding: 0.25rem 0.6rem; border: 1px solid var(--border);
-            border-radius: 6px; min-width: 110px; text-align: center;
-        }
+        .board-date-label { font-size: 0.875rem; font-weight: 600; color: var(--text); padding: 0.2rem 0.55rem; border: 1px solid var(--border); border-radius: 6px; min-width: 100px; text-align: center; }
         .board-header-right { display: flex; align-items: center; gap: 0.5rem; }
-        .btn-sm {
-            padding: 0.35rem 0.75rem; border-radius: 6px; font-size: 0.8rem;
-            cursor: pointer; border: 1px solid var(--border); background: var(--sticker-bg);
-            color: var(--text); font-weight: 500; transition: all 0.2s;
-        }
+        .btn-sm { padding: 0.3rem 0.65rem; border-radius: 6px; font-size: 0.78rem; cursor: pointer; border: 1px solid var(--border); background: var(--sticker-bg); color: var(--text); font-weight: 500; transition: all 0.2s; }
         .btn-sm:hover { border-color: #4a90e2; }
-        .daily-prompt {
-            font-size: 0.9rem; color: #4a90e2; font-style: italic;
-            background: rgba(74,144,226,0.08); border: 1px solid rgba(74,144,226,0.2);
-            border-radius: 6px; padding: 0.5rem 0.75rem;
-        }
-        /* --- Whiteboard --- */
-        .whiteboard {
-            flex: 1; min-height: 380px; background: var(--whiteboard);
-            border-radius: 10px; border: 1px solid var(--border);
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
-            padding: 1.25rem; position: relative; overflow: hidden;
-        }
-        .whiteboard-content { position: relative; width: 100%; min-height: 340px; padding-bottom: 3rem; }
-        /* --- Stickers --- */
-        .board-sticker {
-            position: absolute; cursor: move; user-select: none;
-            background: var(--sticker-bg); border: 1px solid var(--sticker-border);
-            border-radius: 8px; padding: 0.5rem 0.6rem;
-            color: var(--sticker-text); font-size: 0.9rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15); min-width: 80px;
-        }
-        .board-sticker.dragging { z-index: 1000; opacity: 0.95; box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+        .daily-prompt { font-size: 0.85rem; color: #4a90e2; font-style: italic; background: rgba(74,144,226,0.08); border: 1px solid rgba(74,144,226,0.2); border-radius: 6px; padding: 0.4rem 0.7rem; flex: 1; }
+        /* Mood indicator */
+        .mood-display { font-size: 1.1rem; cursor: pointer; title: "Your mood today"; }
+        /* Whiteboard */
+        .whiteboard { flex: 1; min-height: 340px; background: var(--whiteboard); border-radius: 10px; border: 1px solid var(--border); box-shadow: inset 0 1px 3px rgba(0,0,0,0.2); padding: 1.1rem; position: relative; overflow: hidden; }
+        .whiteboard-content { position: relative; width: 100%; min-height: 300px; padding-bottom: 3rem; }
+        .board-sticker { position: absolute; cursor: move; user-select: none; background: var(--sticker-bg); border: 1px solid var(--sticker-border); border-radius: 8px; padding: 0.5rem 0.6rem; color: var(--sticker-text); font-size: 0.875rem; box-shadow: 0 2px 8px rgba(0,0,0,0.15); min-width: 80px; }
+        .board-sticker.dragging { z-index: 1000; opacity: 0.95; }
         .board-sticker img { max-width: 100%; max-height: 140px; border-radius: 6px; display: block; pointer-events: none; }
         .board-sticker.color-yellow { background: #fef3c7; border-color: #f59e0b; color: #78350f; }
         .board-sticker.color-blue   { background: #dbeafe; border-color: #3b82f6; color: #1e3a5f; }
         .board-sticker.color-pink   { background: #fce7f3; border-color: #ec4899; color: #831843; }
         .board-sticker.color-green  { background: #d1fae5; border-color: #10b981; color: #064e3b; }
         .board-sticker.color-purple { background: #ede9fe; border-color: #8b5cf6; color: #3b0764; }
-        .sticker-toolbar {
-            display: none; position: absolute; top: -28px; right: 0;
-            background: var(--bg-solid); border: 1px solid var(--border);
-            border-radius: 6px; padding: 2px 4px; gap: 2px;
-            flex-direction: row; align-items: center; z-index: 10;
-        }
+        .sticker-toolbar { display: none; position: absolute; top: -28px; right: 0; background: var(--bg-solid); border: 1px solid var(--border); border-radius: 6px; padding: 2px 4px; gap: 2px; flex-direction: row; align-items: center; z-index: 10; }
         .board-sticker:hover .sticker-toolbar { display: flex; }
-        .sticker-toolbar button {
-            background: none; border: none; cursor: pointer;
-            font-size: 0.85rem; padding: 2px 4px; border-radius: 4px;
-            color: var(--text); transition: background 0.15s;
-        }
+        .sticker-toolbar button { background: none; border: none; cursor: pointer; font-size: 0.8rem; padding: 2px 4px; border-radius: 4px; color: var(--text); transition: background 0.15s; }
         .sticker-toolbar button:hover { background: var(--sticker-bg); }
-        .resize-handle {
-            position: absolute; bottom: 2px; right: 2px;
-            width: 14px; height: 14px; cursor: se-resize;
-            background: var(--sticker-border); border-radius: 2px;
-            opacity: 0.5;
-        }
+        .resize-handle { position: absolute; bottom: 2px; right: 2px; width: 12px; height: 12px; cursor: se-resize; background: var(--sticker-border); border-radius: 2px; opacity: 0.5; }
         .board-sticker:hover .resize-handle { opacity: 1; }
-        /* Reactions on sticker */
-        .sticker-reactions {
-            display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px;
-        }
-        .reaction-btn {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 12px; padding: 1px 6px; font-size: 0.75rem;
-            cursor: pointer; transition: all 0.15s; color: var(--text);
-        }
+        .sticker-reactions { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; }
+        .reaction-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1px 6px; font-size: 0.72rem; cursor: pointer; transition: all 0.15s; color: var(--text); }
         .reaction-btn:hover, .reaction-btn.mine { background: rgba(74,144,226,0.2); border-color: #4a90e2; }
         .reaction-btn.add-reaction { opacity: 0.6; }
         .reaction-btn.add-reaction:hover { opacity: 1; }
-        /* Board add button */
-        .board-add-btn {
-            position: absolute; bottom: 1rem; right: 1rem;
-            width: 46px; height: 46px; border-radius: 50%;
-            background: #4a90e2; color: white; border: none;
-            font-size: 1.4rem; cursor: pointer;
-            box-shadow: 0 2px 10px rgba(74,144,226,0.4); transition: background 0.2s;
-        }
+        .pin-indicator { font-size: 0.7rem; position: absolute; top: 2px; left: 4px; opacity: 0.7; }
+        .board-add-btn { position: absolute; bottom: 1rem; right: 1rem; width: 44px; height: 44px; border-radius: 50%; background: #4a90e2; color: white; border: none; font-size: 1.3rem; cursor: pointer; box-shadow: 0 2px 10px rgba(74,144,226,0.4); transition: background 0.2s; }
         .board-add-btn:hover { background: #357abd; }
-        /* --- Feed section --- */
-        .feed-section h3 { margin: 0 0 0.75rem; font-size: 1rem; font-weight: 600; color: var(--text); }
-        .feed-empty { color: var(--text2); font-size: 0.9rem; padding: 1rem 0; }
-        .feed-post {
-            background: var(--surface); border: 1px solid var(--border2);
-            border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 0.6rem;
-        }
-        .feed-post-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
-        .feed-avatar {
-            width: 32px; height: 32px; border-radius: 50%;
-            background: #4a90e2; display: flex; align-items: center;
-            justify-content: center; font-weight: 600; font-size: 0.9rem;
-            color: white; overflow: hidden; flex-shrink: 0;
-        }
-        .feed-avatar img { width: 32px; height: 32px; object-fit: cover; }
-        .feed-name { font-weight: 600; font-size: 0.9rem; color: var(--text); }
-        .feed-time { font-size: 0.75rem; color: var(--text2); margin-left: auto; }
-        .feed-content { font-size: 0.9rem; color: var(--text); margin-bottom: 0.5rem; word-break: break-word; }
+        /* Friend feed */
+        .feed-section h3 { margin: 0 0 0.65rem; font-size: 0.95rem; font-weight: 600; color: var(--text); }
+        .feed-empty { color: var(--text2); font-size: 0.875rem; padding: 0.75rem 0; }
+        .feed-post { background: var(--surface); border: 1px solid var(--border2); border-radius: 8px; padding: 0.7rem 0.9rem; margin-bottom: 0.55rem; }
+        .feed-post-header { display: flex; align-items: center; gap: 0.55rem; margin-bottom: 0.45rem; }
+        .feed-avatar { width: 30px; height: 30px; border-radius: 50%; background: #4a90e2; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.85rem; color: white; overflow: hidden; flex-shrink: 0; }
+        .feed-avatar img { width: 30px; height: 30px; object-fit: cover; }
+        .feed-name { font-weight: 600; font-size: 0.875rem; color: var(--text); }
+        .feed-time { font-size: 0.72rem; color: var(--text2); margin-left: auto; }
+        .feed-content { font-size: 0.875rem; color: var(--text); margin-bottom: 0.45rem; word-break: break-word; }
         .feed-content img { max-width: 180px; max-height: 120px; border-radius: 6px; display: block; }
-        .feed-content.color-yellow { background: #fef3c7; border-radius: 6px; padding: 4px 8px; color: #78350f; }
-        .feed-content.color-blue   { background: #dbeafe; border-radius: 6px; padding: 4px 8px; color: #1e3a5f; }
-        .feed-content.color-pink   { background: #fce7f3; border-radius: 6px; padding: 4px 8px; color: #831843; }
-        .feed-content.color-green  { background: #d1fae5; border-radius: 6px; padding: 4px 8px; color: #064e3b; }
-        .feed-content.color-purple { background: #ede9fe; border-radius: 6px; padding: 4px 8px; color: #3b0764; }
+        .feed-content.color-yellow { background:#fef3c7;border-radius:6px;padding:4px 8px;color:#78350f; }
+        .feed-content.color-blue   { background:#dbeafe;border-radius:6px;padding:4px 8px;color:#1e3a5f; }
+        .feed-content.color-pink   { background:#fce7f3;border-radius:6px;padding:4px 8px;color:#831843; }
+        .feed-content.color-green  { background:#d1fae5;border-radius:6px;padding:4px 8px;color:#064e3b; }
+        .feed-content.color-purple { background:#ede9fe;border-radius:6px;padding:4px 8px;color:#3b0764; }
         .feed-reactions { display: flex; flex-wrap: wrap; gap: 4px; }
         /* --- Modals --- */
-        .modal-overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.65); z-index: 1000;
-            align-items: center; justify-content: center;
-        }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 1000; align-items: center; justify-content: center; }
         .modal-overlay.show { display: flex; }
-        .modal-box {
-            background: var(--bg-solid); padding: 1.75rem;
-            border-radius: 12px; width: 90%; max-width: 420px;
-            border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-            position: relative; max-height: 90vh; overflow-y: auto;
-        }
-        .modal-box h2 { margin: 0 0 1.25rem; font-size: 1.2rem; }
-        .close-btn {
-            background: transparent; border: none; color: var(--text2);
-            font-size: 1.4rem; cursor: pointer; position: absolute;
-            top: 0.75rem; right: 0.75rem; padding: 0.3rem; line-height: 1;
-        }
+        .modal-box { background: var(--bg-solid); padding: 1.6rem; border-radius: 12px; width: 90%; max-width: 420px; border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(0,0,0,0.5); position: relative; max-height: 90vh; overflow-y: auto; }
+        .modal-box h2 { margin: 0 0 1.1rem; font-size: 1.15rem; }
+        .close-btn { background: transparent; border: none; color: var(--text2); font-size: 1.4rem; cursor: pointer; position: absolute; top: 0.7rem; right: 0.7rem; padding: 0.3rem; line-height: 1; }
         .close-btn:hover { color: var(--text); }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; margin-bottom: 0.3rem; color: var(--text2); font-size: 0.85rem; }
-        .form-input, .form-textarea {
-            width: 100%; padding: 0.65rem 0.75rem;
-            border: 1px solid var(--input-border); border-radius: 6px;
-            background: var(--input-bg); color: var(--text); font-size: 0.95rem;
-        }
+        .form-group { margin-bottom: 0.9rem; }
+        .form-group label { display: block; margin-bottom: 0.25rem; color: var(--text2); font-size: 0.82rem; }
+        .form-input, .form-textarea { width: 100%; padding: 0.6rem 0.7rem; border: 1px solid var(--input-border); border-radius: 6px; background: var(--input-bg); color: var(--text); font-size: 0.9rem; }
         .form-input::placeholder, .form-textarea::placeholder { color: var(--text2); }
         .form-input:focus, .form-textarea:focus { outline: none; border-color: #4a90e2; }
-        .form-textarea { min-height: 70px; resize: vertical; font-family: inherit; }
-        .btn-primary {
-            width: 100%; padding: 0.7rem; background: #4a90e2; color: white;
-            border: none; border-radius: 6px; font-size: 0.95rem;
-            font-weight: 600; cursor: pointer; transition: background 0.2s;
-        }
+        .form-textarea { min-height: 65px; resize: vertical; font-family: inherit; }
+        .btn-primary { width: 100%; padding: 0.65rem; background: #4a90e2; color: white; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
         .btn-primary:hover { background: #357abd; }
         /* Modal tabs */
-        .modal-tabs { display: flex; gap: 0.4rem; margin-bottom: 1rem; }
-        .modal-tab {
-            padding: 0.4rem 0.9rem; background: var(--sticker-bg);
-            border: 1px solid var(--sticker-border); border-radius: 6px;
-            color: var(--text); cursor: pointer; font-size: 0.85rem; transition: all 0.2s;
-        }
+        .modal-tabs { display: flex; gap: 0.35rem; margin-bottom: 0.9rem; flex-wrap: wrap; }
+        .modal-tab { padding: 0.35rem 0.8rem; background: var(--sticker-bg); border: 1px solid var(--sticker-border); border-radius: 6px; color: var(--text); cursor: pointer; font-size: 0.8rem; transition: all 0.2s; }
         .modal-tab.active { background: #4a90e2; border-color: #4a90e2; color: white; }
         .tab-panel { display: none; }
         .tab-panel.active { display: block; }
         /* Color picker */
-        .color-picker-row { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
-        .color-swatch {
-            width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
-            border: 2px solid transparent; transition: border-color 0.15s;
-        }
+        .color-picker-row { display: flex; gap: 0.45rem; margin-bottom: 0.7rem; flex-wrap: wrap; }
+        .color-swatch { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: border-color 0.15s; }
         .color-swatch:hover, .color-swatch.selected { border-color: #4a90e2; transform: scale(1.1); }
         .color-swatch.c-default { background: var(--sticker-bg); border-color: var(--sticker-border); }
-        .color-swatch.c-yellow  { background: #fef3c7; }
-        .color-swatch.c-blue    { background: #dbeafe; }
-        .color-swatch.c-pink    { background: #fce7f3; }
-        .color-swatch.c-green   { background: #d1fae5; }
-        .color-swatch.c-purple  { background: #ede9fe; }
+        .color-swatch.c-yellow { background: #fef3c7; }
+        .color-swatch.c-blue   { background: #dbeafe; }
+        .color-swatch.c-pink   { background: #fce7f3; }
+        .color-swatch.c-green  { background: #d1fae5; }
+        .color-swatch.c-purple { background: #ede9fe; }
         /* GIF grid */
-        .gif-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.4rem; max-height: 200px; overflow-y: auto; margin-bottom: 0.75rem; }
-        .gif-grid img { width: 100%; height: 75px; object-fit: cover; border-radius: 5px; cursor: pointer; }
+        .gif-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.35rem; max-height: 180px; overflow-y: auto; margin-bottom: 0.7rem; }
+        .gif-grid img { width: 100%; height: 70px; object-fit: cover; border-radius: 5px; cursor: pointer; }
         .gif-grid img:hover { opacity: 0.85; }
+        /* Mood picker */
+        .mood-picker-row { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+        .mood-btn { background: var(--sticker-bg); border: 2px solid transparent; border-radius: 8px; padding: 0.35rem 0.45rem; font-size: 1.3rem; cursor: pointer; transition: all 0.15s; }
+        .mood-btn:hover, .mood-btn.selected { border-color: #4a90e2; background: rgba(74,144,226,0.15); transform: scale(1.1); }
         /* Check-in modal */
         .checkin-modal-body { text-align: center; padding: 0.5rem 0; }
-        .checkin-modal-body p { color: var(--text2); margin: 0.6rem 0; font-size: 0.95rem; }
-        .streak-box {
-            background: rgba(74,144,226,0.12); border: 1px solid rgba(74,144,226,0.35);
-            border-radius: 8px; padding: 0.75rem 1.25rem; margin: 1rem auto;
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            font-size: 1.2rem; font-weight: 600; color: var(--text);
-        }
-        /* Badges modal */
-        .badge-list-item {
-            display: flex; align-items: center; gap: 0.75rem;
-            padding: 0.6rem 0; border-bottom: 1px solid var(--border2);
-        }
-        .badge-list-item .badge-emoji { font-size: 1.5rem; width: 2rem; text-align: center; }
+        .checkin-modal-body p { color: var(--text2); margin: 0.5rem 0; font-size: 0.9rem; }
+        .streak-box { background: rgba(74,144,226,0.12); border: 1px solid rgba(74,144,226,0.35); border-radius: 8px; padding: 0.65rem 1.2rem; margin: 0.85rem auto; display: inline-flex; align-items: center; gap: 0.4rem; font-size: 1.15rem; font-weight: 600; color: var(--text); }
+        .milestone-anim { font-size: 2rem; animation: pop 0.5s ease; display: none; }
+        @keyframes pop { 0%{transform:scale(0);opacity:0} 60%{transform:scale(1.3)} 100%{transform:scale(1);opacity:1} }
+        /* Badges */
+        .badge-list-item { display: flex; align-items: center; gap: 0.7rem; padding: 0.55rem 0; border-bottom: 1px solid var(--border2); }
+        .badge-list-item .badge-emoji { font-size: 1.4rem; width: 1.8rem; text-align: center; }
         .badge-list-item.locked-item { opacity: 0.4; }
-        .badge-list-item .badge-info .badge-name { font-weight: 600; font-size: 0.9rem; }
-        .badge-list-item .badge-info .badge-desc { font-size: 0.8rem; color: var(--text2); }
-        /* Sign-in promo modal */
-        .sign-up-section { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border); text-align: center; }
-        .sign-up-section p { color: var(--text2); margin-bottom: 0.75rem; font-size: 0.9rem; }
-        .sign-in-link-btn {
-            display: block; padding: 0.7rem; background: #4a90e2; color: white;
-            text-align: center; text-decoration: none; border-radius: 6px;
-            font-size: 0.95rem; font-weight: 600; transition: background 0.2s;
-        }
+        .badge-list-item .badge-info .badge-name { font-weight: 600; font-size: 0.875rem; }
+        .badge-list-item .badge-info .badge-desc { font-size: 0.78rem; color: var(--text2); }
+        /* Sign-in promo */
+        .sign-up-section { margin-top: 1.1rem; padding-top: 1.1rem; border-top: 1px solid var(--border); text-align: center; }
+        .sign-up-section p { color: var(--text2); margin-bottom: 0.7rem; font-size: 0.875rem; }
+        .sign-in-link-btn { display: block; padding: 0.65rem; background: #4a90e2; color: white; text-align: center; text-decoration: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; transition: background 0.2s; }
         .sign-in-link-btn:hover { background: #357abd; }
-        .sign-up-btn {
-            display: block; margin-top: 0.5rem; padding: 0.7rem; background: transparent;
-            color: #4a90e2; border: 2px solid #4a90e2; text-align: center; text-decoration: none;
-            border-radius: 6px; font-size: 0.95rem; font-weight: 600; transition: all 0.2s;
-        }
+        .sign-up-btn { display: block; margin-top: 0.5rem; padding: 0.65rem; background: transparent; color: #4a90e2; border: 2px solid #4a90e2; text-align: center; text-decoration: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; transition: all 0.2s; }
         .sign-up-btn:hover { background: rgba(74,144,226,0.1); }
         /* Emoji picker */
-        .emoji-picker-row { display: flex; gap: 0.35rem; flex-wrap: wrap; }
-        .emoji-pick-btn {
-            background: var(--sticker-bg); border: 1px solid var(--sticker-border);
-            border-radius: 8px; padding: 0.3rem 0.5rem; font-size: 1.2rem; cursor: pointer;
-            transition: background 0.15s;
-        }
+        .emoji-picker-row { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+        .emoji-pick-btn { background: var(--sticker-bg); border: 1px solid var(--sticker-border); border-radius: 8px; padding: 0.3rem 0.45rem; font-size: 1.15rem; cursor: pointer; transition: background 0.15s; }
         .emoji-pick-btn:hover { background: rgba(74,144,226,0.2); }
         /* Notification bar */
-        .notification-bar {
-            background: rgba(46,204,113,0.12); border-bottom: 1px solid rgba(46,204,113,0.25);
-            padding: 0.4rem 1.5rem; font-size: 0.85rem; color: #2ecc71;
-            display: none;
-        }
+        .notification-bar { background: rgba(46,204,113,0.12); border-bottom: 1px solid rgba(46,204,113,0.25); padding: 0.35rem 1.5rem; font-size: 0.83rem; color: #2ecc71; display: none; }
+        /* Notifications modal */
+        .notif-item { display: flex; align-items: flex-start; gap: 0.65rem; padding: 0.65rem 0; border-bottom: 1px solid var(--border2); }
+        .notif-item.unread { background: rgba(74,144,226,0.05); border-radius: 6px; padding: 0.65rem 0.5rem; }
+        .notif-icon { font-size: 1.2rem; flex-shrink: 0; }
+        .notif-msg { font-size: 0.85rem; color: var(--text); flex: 1; }
+        .notif-time { font-size: 0.72rem; color: var(--text2); }
+        /* Weekly recap */
+        .recap-friend { display: flex; align-items: center; gap: 0.65rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border2); }
+        .recap-avatar { width: 36px; height: 36px; border-radius: 50%; background: #4a90e2; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.9rem; color: white; overflow: hidden; flex-shrink: 0; }
+        .recap-avatar img { width: 36px; height: 36px; object-fit: cover; }
+        .recap-info { flex: 1; font-size: 0.875rem; }
+        .recap-stat { font-size: 0.78rem; color: var(--text2); }
+        /* Custom prompts */
+        .prompt-item { display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid var(--border2); font-size: 0.875rem; gap: 0.5rem; }
+        .prompt-del-btn { background: none; border: none; cursor: pointer; color: var(--text2); font-size: 0.85rem; flex-shrink: 0; }
+        .prompt-del-btn:hover { color: #e74c3c; }
+        /* Search */
+        .search-result-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.45rem 0; border-bottom: 1px solid var(--border2); }
+        .search-avatar { width: 32px; height: 32px; border-radius: 50%; background: #4a90e2; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.85rem; color: white; overflow: hidden; flex-shrink: 0; }
+        .search-avatar img { width: 32px; height: 32px; object-fit: cover; }
+        .search-name { flex: 1; font-size: 0.875rem; }
+        .search-status { font-size: 0.78rem; color: var(--text2); }
     </style>
 </head>
 <body>
@@ -390,13 +232,12 @@
     var el = document.getElementById("user-json");
     try { window.__USER__ = (el && el.textContent.trim()) ? JSON.parse(el.textContent.trim()) : null; }
     catch(e) { window.__USER__ = null; }
+    try { var t = localStorage.getItem('kindred_theme'); if(t) document.documentElement.setAttribute('data-theme', t); } catch(e){}
 })();
 </script>
 
-<!-- Notification bar -->
 <div class="notification-bar" id="notifBar"></div>
 
-<!-- Menu bar -->
 <div class="menu-bar">
     <div class="menu-bar-left">
         <span class="site-name">Kindred</span>
@@ -405,17 +246,23 @@
             <div class="friend-checkin-badge" id="friendCheckinBadge" style="display:none;"></div>
         </div>
         <a class="btn-ghost" href="/friends" id="friendsNavBtn" style="display:none;">Friends</a>
+        <a class="btn-ghost" href="/groups" id="groupsNavBtn" style="display:none;">Groups</a>
         <a class="btn-ghost" href="/leaderboard" id="lbNavBtn" style="display:none;">Leaderboard</a>
         <span class="streak-display">
             <span>🔥</span>
-            <span id="headerStreak">0</span> day streak
-            <span class="freeze-badge" id="freezeBadge" style="display:none;" title="Streak freezes available" onclick="openFreezeModal()"></span>
+            <span id="headerStreak">0</span>&nbsp;day streak
+            <span class="freeze-badge" id="freezeBadge" style="display:none;" onclick="openFreezeModal()"></span>
         </span>
+        <span id="moodDisplayMenu" class="mood-display" style="display:none;" title="Your mood today" onclick="openCheckInModal()"></span>
     </div>
     <div class="menu-bar-right">
-        <span id="headerGreeting" style="font-size:0.9rem;color:var(--text2);"></span>
-        <span id="todayDateEl" style="font-size:0.85rem;color:var(--text2);"></span>
-        <button class="theme-btn" onclick="toggleTheme()" title="Toggle dark/light mode" id="themeBtn">🌙</button>
+        <span id="headerGreeting" style="font-size:0.85rem;color:var(--text2);"></span>
+        <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        <!-- Notifications bell -->
+        <div class="notif-bell-wrap" id="notifBellWrap" style="display:none;">
+            <button class="notif-bell" onclick="openNotifsModal()">🔔</button>
+            <div class="notif-count" id="notifCount" style="display:none;"></div>
+        </div>
         <a href="/signin" class="btn-ghost" id="signInNavBtn">Sign In</a>
         <div class="user-dropdown" id="menuUserDropdown" style="display:none;">
             <button class="user-icon-btn" onclick="toggleUserMenu()" id="userIconBtn">👤</button>
@@ -423,10 +270,14 @@
                 <a href="#" onclick="openBadgesModal(); return false;">Badges</a>
                 <a href="/profile/{{ user.display_name if user else '' }}" id="profileLink">My Profile</a>
                 <a href="/friends">Friends</a>
+                <a href="/groups">Groups</a>
                 <a href="/leaderboard">Leaderboard</a>
                 <a href="/users">Community</a>
                 <div class="divider"></div>
                 <button onclick="openEditProfileModal()">Edit Profile</button>
+                <button onclick="openCustomPromptsModal()">Custom Prompts</button>
+                <button onclick="openRecapModal()">Weekly Recap</button>
+                <button onclick="openSearchModal()">Find Friends</button>
                 <div class="divider"></div>
                 <a href="/logout" class="sign-out">Sign Out</a>
             </div>
@@ -435,46 +286,49 @@
     </div>
 </div>
 
-<!-- Main layout -->
 <div class="content">
     <!-- Sidebar -->
     <aside class="sidebar">
         <div>
-            <h3>Check-in history</h3>
-            <ul class="check-in-dates-list" id="checkinHistoryList"></ul>
+            <h3>Check-in Calendar</h3>
+            <div class="cal-header">
+                <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+            </div>
+            <div class="cal-grid" id="calGrid"></div>
         </div>
         <div>
             <h3>Your Badges</h3>
             <div class="badges-row" id="sidebarBadges">
-                <span style="font-size:0.8rem;color:var(--text2);">Sign in to see badges</span>
+                <span style="font-size:0.78rem;color:var(--text2);">Sign in to see badges</span>
             </div>
+        </div>
+        <div id="challengesSidebar" style="display:none;">
+            <h3>Weekly Challenges</h3>
+            <div id="challengesList"></div>
         </div>
     </aside>
 
-    <!-- Main content -->
+    <!-- Main -->
     <div class="content-main">
-        <!-- Board header -->
         <div class="board-header">
             <div class="board-header-left">
                 <div class="board-date-nav">
-                    <button onclick="shiftBoardDate(-1)" title="Previous day">&#8249;</button>
+                    <button onclick="shiftBoardDate(-1)">&#8249;</button>
                     <span class="board-date-label" id="boardDateLabel">Today</span>
-                    <button onclick="shiftBoardDate(1)" title="Next day" id="boardDateNext">&#8250;</button>
+                    <button onclick="shiftBoardDate(1)" id="boardDateNext">&#8250;</button>
                 </div>
                 <div class="daily-prompt" id="dailyPromptEl">{{ daily_prompt }}</div>
             </div>
             <div class="board-header-right">
-                <button class="btn-sm" onclick="exportBoard()" title="Download board as image">Export</button>
+                <button class="btn-sm" onclick="exportBoard()">Export</button>
             </div>
         </div>
 
-        <!-- Whiteboard -->
         <div class="whiteboard" id="whiteboardEl">
             <div class="whiteboard-content" id="whiteboardContent"></div>
-            <button type="button" class="board-add-btn" onclick="openAddContentModal()" title="Add text, image or GIF" id="boardAddBtn" style="display:none;">+</button>
+            <button type="button" class="board-add-btn" onclick="openAddContentModal()" id="boardAddBtn" style="display:none;">+</button>
         </div>
 
-        <!-- Friend feed -->
         <div class="feed-section" id="feedSection" style="display:none;">
             <h3>Friends' Posts Today</h3>
             <div id="feedContent"><span class="feed-empty">Loading...</span></div>
@@ -482,18 +336,15 @@
     </div>
 </div>
 
-<!-- =============================== MODALS =============================== -->
+<!-- ===================== MODALS ===================== -->
 
-<!-- Sign-in promo modal -->
+<!-- Sign-in promo -->
 <div class="modal-overlay" id="signInModal" onclick="closeModal('signInModal',event)">
     <div class="modal-box" onclick="event.stopPropagation()">
         <button class="close-btn" onclick="closeModalById('signInModal')">&times;</button>
         <h2>Sign In to Kindred</h2>
         <a href="/signin" class="sign-in-link-btn">Go to Sign In</a>
-        <div class="sign-up-section">
-            <p>Don't have an account yet?</p>
-            <a href="/signup" class="sign-up-btn">Sign Up Free</a>
-        </div>
+        <div class="sign-up-section"><p>Don't have an account yet?</p><a href="/signup" class="sign-up-btn">Sign Up Free</a></div>
     </div>
 </div>
 
@@ -501,14 +352,28 @@
 <div class="modal-overlay" id="checkInModal" onclick="closeModal('checkInModal',event)">
     <div class="modal-box" onclick="event.stopPropagation()">
         <button class="close-btn" onclick="closeModalById('checkInModal')">&times;</button>
-        <h2>Checked In!</h2>
+        <h2>Check In</h2>
         <div class="checkin-modal-body">
-            <p>You checked in for today.</p>
-            <p>Check-ins today: <strong id="modalTodayCount">1</strong></p>
-            <div class="streak-box">
-                <span>🔥</span> <span id="modalStreakCount">0</span> day streak
+            <div id="checkInPreForm">
+                <p>How are you feeling today?</p>
+                <div class="mood-picker-row" id="moodPicker">
+                    <button class="mood-btn" data-mood="😊" onclick="pickMood(this)">😊</button>
+                    <button class="mood-btn" data-mood="😄" onclick="pickMood(this)">😄</button>
+                    <button class="mood-btn" data-mood="😐" onclick="pickMood(this)">😐</button>
+                    <button class="mood-btn" data-mood="😴" onclick="pickMood(this)">😴</button>
+                    <button class="mood-btn" data-mood="😔" onclick="pickMood(this)">😔</button>
+                    <button class="mood-btn" data-mood="😤" onclick="pickMood(this)">😤</button>
+                    <button class="mood-btn" data-mood="🤩" onclick="pickMood(this)">🤩</button>
+                    <button class="mood-btn" data-mood="😰" onclick="pickMood(this)">😰</button>
+                </div>
+                <button class="btn-primary" onclick="submitCheckIn()" style="margin-top:0.5rem;">Check In</button>
             </div>
-            <p id="modalCheckInDate" style="font-size:0.9rem;color:var(--text2);"></p>
+            <div id="checkInResult" style="display:none;">
+                <div class="milestone-anim" id="milestoneAnim"></div>
+                <p>You checked in for today!</p>
+                <div class="streak-box">🔥 <span id="modalStreakCount">0</span> day streak</div>
+                <p id="modalCheckInDate" style="font-size:0.85rem;color:var(--text2);"></p>
+            </div>
         </div>
     </div>
 </div>
@@ -518,7 +383,7 @@
     <div class="modal-box" onclick="event.stopPropagation()">
         <button class="close-btn" onclick="closeModalById('freezeModal')">&times;</button>
         <h2>Streak Freeze</h2>
-        <p style="color:var(--text2);font-size:0.9rem;">A streak freeze protects your streak if you missed yesterday's check-in.</p>
+        <p style="color:var(--text2);font-size:0.875rem;">A streak freeze protects your streak if you missed yesterday's check-in.</p>
         <p>You have <strong id="freezeCount">0</strong> freeze(s). You earn one at each 7-day streak milestone.</p>
         <button class="btn-primary" onclick="useStreakFreeze()">Use a Freeze (protect yesterday)</button>
     </div>
@@ -531,38 +396,37 @@
         <h2>Add to board</h2>
         <div class="modal-tabs">
             <button class="modal-tab active" data-tab="text" onclick="switchAddTab('text')">Text</button>
-            <button class="modal-tab" data-tab="image" onclick="switchAddTab('image')">Image</button>
+            <button class="modal-tab" data-tab="photo" onclick="switchAddTab('photo')">Photo</button>
+            <button class="modal-tab" data-tab="image" onclick="switchAddTab('image')">Image URL</button>
             <button class="modal-tab" data-tab="gif" onclick="switchAddTab('gif')">GIF</button>
         </div>
         <div class="form-group">
             <label>Sticker color</label>
             <div class="color-picker-row" id="colorPicker">
-                <div class="color-swatch c-default selected" data-color="default" onclick="pickColor(this)" title="Default"></div>
-                <div class="color-swatch c-yellow"  data-color="yellow"  onclick="pickColor(this)" title="Yellow"></div>
-                <div class="color-swatch c-blue"    data-color="blue"    onclick="pickColor(this)" title="Blue"></div>
-                <div class="color-swatch c-pink"    data-color="pink"    onclick="pickColor(this)" title="Pink"></div>
-                <div class="color-swatch c-green"   data-color="green"   onclick="pickColor(this)" title="Green"></div>
-                <div class="color-swatch c-purple"  data-color="purple"  onclick="pickColor(this)" title="Purple"></div>
+                <div class="color-swatch c-default selected" data-color="default" onclick="pickColor(this)"></div>
+                <div class="color-swatch c-yellow" data-color="yellow" onclick="pickColor(this)"></div>
+                <div class="color-swatch c-blue" data-color="blue" onclick="pickColor(this)"></div>
+                <div class="color-swatch c-pink" data-color="pink" onclick="pickColor(this)"></div>
+                <div class="color-swatch c-green" data-color="green" onclick="pickColor(this)"></div>
+                <div class="color-swatch c-purple" data-color="purple" onclick="pickColor(this)"></div>
             </div>
         </div>
         <div id="tabText" class="tab-panel active">
-            <div class="form-group">
-                <label>Your text</label>
-                <textarea class="form-textarea" id="addTextInput" placeholder="Type something..."></textarea>
-            </div>
+            <div class="form-group"><label>Your text</label><textarea class="form-textarea" id="addTextInput" placeholder="Type something..."></textarea></div>
             <button class="btn-primary" onclick="addTextToBoard()">Add text</button>
         </div>
+        <div id="tabPhoto" class="tab-panel">
+            <div class="form-group"><label>Upload Photo</label><input type="file" id="photoFileInput" accept="image/*" style="color:var(--text);font-size:0.85rem;width:100%;"></div>
+            <button class="btn-primary" onclick="uploadPhotoToBoard()">Upload & Add</button>
+        </div>
         <div id="tabImage" class="tab-panel">
-            <div class="form-group">
-                <label>Image URL</label>
-                <input class="form-input" type="url" id="addImageInput" placeholder="https://example.com/image.jpg">
-            </div>
+            <div class="form-group"><label>Image URL</label><input class="form-input" type="url" id="addImageInput" placeholder="https://example.com/image.jpg"></div>
             <button class="btn-primary" onclick="addImageToBoard()">Add image</button>
         </div>
         <div id="tabGif" class="tab-panel">
             <div class="form-group">
                 <label>Search GIFs (Tenor)</label>
-                <div style="display:flex;gap:0.4rem;">
+                <div style="display:flex;gap:0.35rem;">
                     <input class="form-input" type="text" id="gifSearchInput" placeholder="e.g. happy, thumbs up">
                     <button class="btn-sm" onclick="searchTenorGifs()" style="white-space:nowrap;">Search</button>
                 </div>
@@ -586,25 +450,35 @@
     <div class="modal-box" onclick="event.stopPropagation()">
         <button class="close-btn" onclick="closeModalById('editProfileModal')">&times;</button>
         <h2>Edit Profile</h2>
+        <div class="form-group"><label>Display Name</label><input class="form-input" type="text" id="editDisplayName" maxlength="50"></div>
+        <div class="form-group"><label>Bio (max 300 chars)</label><textarea class="form-textarea" id="editBio" maxlength="300"></textarea></div>
+        <div class="form-group"><label>Status Message</label><input class="form-input" type="text" id="editStatusMsg" maxlength="100" placeholder="e.g. feeling tired today"></div>
         <div class="form-group">
-            <label>Display Name</label>
-            <input class="form-input" type="text" id="editDisplayName" maxlength="50">
+            <label>Profile Theme</label>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;" id="themeColorPicker">
+                <button class="color-swatch" data-theme="blue"   style="background:#4a90e2;" onclick="pickTheme(this)" title="Blue"></button>
+                <button class="color-swatch" data-theme="purple" style="background:#8b5cf6;" onclick="pickTheme(this)" title="Purple"></button>
+                <button class="color-swatch" data-theme="green"  style="background:#10b981;" onclick="pickTheme(this)" title="Green"></button>
+                <button class="color-swatch" data-theme="pink"   style="background:#ec4899;" onclick="pickTheme(this)" title="Pink"></button>
+                <button class="color-swatch" data-theme="orange" style="background:#f59e0b;" onclick="pickTheme(this)" title="Orange"></button>
+                <button class="color-swatch" data-theme="red"    style="background:#ef4444;" onclick="pickTheme(this)" title="Red"></button>
+            </div>
         </div>
         <div class="form-group">
-            <label>Bio (max 300 chars)</label>
-            <textarea class="form-textarea" id="editBio" maxlength="300"></textarea>
+            <label>Board Privacy</label>
+            <select class="form-input" id="editBoardPrivacy">
+                <option value="friends">Friends only</option>
+                <option value="public">Public</option>
+            </select>
         </div>
-        <div class="form-group">
-            <label>Profile Picture</label>
-            <input type="file" id="avatarFileInput" accept="image/*" style="color:var(--text);font-size:0.85rem;">
-        </div>
+        <div class="form-group"><label>Profile Picture</label><input type="file" id="avatarFileInput" accept="image/*" style="color:var(--text);font-size:0.85rem;"></div>
         <button class="btn-primary" onclick="saveProfile()">Save Changes</button>
     </div>
 </div>
 
 <!-- Reaction picker modal -->
 <div class="modal-overlay" id="reactModal" onclick="closeModal('reactModal',event)">
-    <div class="modal-box" onclick="event.stopPropagation()" style="max-width:320px;">
+    <div class="modal-box" onclick="event.stopPropagation()" style="max-width:300px;">
         <button class="close-btn" onclick="closeModalById('reactModal')">&times;</button>
         <h2>React</h2>
         <div class="emoji-picker-row">
@@ -620,21 +494,63 @@
     </div>
 </div>
 
-<!-- =============================== SCRIPTS =============================== -->
+<!-- Notifications modal -->
+<div class="modal-overlay" id="notifsModal" onclick="closeModal('notifsModal',event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <button class="close-btn" onclick="closeModalById('notifsModal')">&times;</button>
+        <h2>Notifications</h2>
+        <div id="notifsList"><span style="color:var(--text2);font-size:0.875rem;">Loading...</span></div>
+    </div>
+</div>
+
+<!-- Weekly recap modal -->
+<div class="modal-overlay" id="recapModal" onclick="closeModal('recapModal',event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <button class="close-btn" onclick="closeModalById('recapModal')">&times;</button>
+        <h2>Weekly Recap</h2>
+        <div id="recapContent"><span style="color:var(--text2);font-size:0.875rem;">Loading...</span></div>
+    </div>
+</div>
+
+<!-- Custom prompts modal -->
+<div class="modal-overlay" id="customPromptsModal" onclick="closeModal('customPromptsModal',event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <button class="close-btn" onclick="closeModalById('customPromptsModal')">&times;</button>
+        <h2>Custom Check-In Prompts</h2>
+        <div id="customPromptsList" style="margin-bottom:1rem;max-height:200px;overflow-y:auto;"></div>
+        <div class="form-group"><label>New Prompt</label><input class="form-input" type="text" id="newPromptInput" placeholder="e.g. What did you build today?" maxlength="200"></div>
+        <button class="btn-primary" onclick="addCustomPrompt()">Add Prompt</button>
+    </div>
+</div>
+
+<!-- Friend search modal -->
+<div class="modal-overlay" id="searchModal" onclick="closeModal('searchModal',event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <button class="close-btn" onclick="closeModalById('searchModal')">&times;</button>
+        <h2>Find Friends</h2>
+        <div style="display:flex;gap:0.4rem;margin-bottom:0.75rem;">
+            <input class="form-input" type="text" id="friendSearchInput" placeholder="Search by display name..." oninput="debounceSearch()">
+        </div>
+        <div id="searchResults"></div>
+    </div>
+</div>
+
+<!-- ===================== SCRIPTS ===================== -->
 <script>
-// ---- State ----
 var BOARD_DATE = '{{ today }}';
 var TODAY = '{{ today }}';
 var SELECTED_COLOR = 'default';
+var SELECTED_THEME = 'blue';
+var SELECTED_MOOD = '';
 var REACT_POST_ID = null;
 var IS_LOGGED_IN = !!window.__USER__;
+var MILESTONE_STREAKS = [3, 7, 14, 30, 100];
 
-// ---- Init ----
 document.addEventListener('DOMContentLoaded', function() {
-    setTodayDate();
-    applyMenuUserState();
     applyTheme();
+    applyMenuUserState();
     updateBoardDateLabel();
+    buildCalendar();
     if (IS_LOGGED_IN) {
         loadCheckinStatus();
         loadCheckinHistory();
@@ -642,7 +558,10 @@ document.addEventListener('DOMContentLoaded', function() {
         loadFeed();
         loadBadgesSidebar();
         loadFriendCheckinCount();
+        loadChallengesSidebar();
         pollUnread();
+        pollNotifications();
+        requestPushPermission();
     } else {
         loadBoardPosts();
     }
@@ -663,33 +582,25 @@ function toggleTheme() {
 }
 
 // ---- Menu state ----
-function setTodayDate() {
-    var el = document.getElementById('todayDateEl');
-    if (el) el.textContent = new Date().toLocaleDateString(undefined, {weekday:'short',month:'short',day:'numeric',year:'numeric'});
-}
 function applyMenuUserState() {
     var u = window.__USER__;
     var signInBtn = document.getElementById('signInNavBtn');
     var greeting = document.getElementById('headerGreeting');
     var dropdown = document.getElementById('menuUserDropdown');
     var guestIcon = document.getElementById('guestIconBtn');
-    var friendsBtn = document.getElementById('friendsNavBtn');
-    var lbBtn = document.getElementById('lbNavBtn');
-    var profileLink = document.getElementById('profileLink');
     if (u) {
         if (signInBtn) signInBtn.style.display = 'none';
         if (guestIcon) guestIcon.style.display = 'none';
         if (dropdown) dropdown.style.display = '';
-        if (greeting) greeting.textContent = 'Hello, ' + (u.display_name || u.email.split('@')[0]);
-        if (friendsBtn) friendsBtn.style.display = '';
-        if (lbBtn) lbBtn.style.display = '';
+        if (greeting) greeting.textContent = 'Hi, ' + (u.display_name || u.email.split('@')[0]);
+        ['friendsNavBtn','groupsNavBtn','lbNavBtn','notifBellWrap'].forEach(function(id) {
+            var el = document.getElementById(id); if (el) el.style.display = '';
+        });
+        var profileLink = document.getElementById('profileLink');
         if (profileLink) profileLink.href = '/profile/' + (u.display_name || u.email.split('@')[0]);
         var iconBtn = document.getElementById('userIconBtn');
-        if (iconBtn && u.avatar) {
-            iconBtn.innerHTML = '<img src="/uploads/' + u.avatar + '" alt="avatar">';
-        }
-        var boardAdd = document.getElementById('boardAddBtn');
-        if (boardAdd) boardAdd.style.display = '';
+        if (iconBtn && u.avatar) iconBtn.innerHTML = '<img src="/uploads/' + u.avatar + '" alt="avatar">';
+        document.getElementById('boardAddBtn').style.display = '';
         document.getElementById('feedSection').style.display = '';
     } else {
         if (signInBtn) signInBtn.style.display = '';
@@ -697,9 +608,7 @@ function applyMenuUserState() {
         if (dropdown) dropdown.style.display = 'none';
     }
 }
-function toggleUserMenu() {
-    document.getElementById('userDropdownMenu').classList.toggle('show');
-}
+function toggleUserMenu() { document.getElementById('userDropdownMenu').classList.toggle('show'); }
 document.addEventListener('click', function(e) {
     var dd = document.querySelector('.user-dropdown');
     var menu = document.getElementById('userDropdownMenu');
@@ -715,35 +624,116 @@ function openAddContentModal() {
     if (BOARD_DATE !== TODAY) { showNotif('You can only post on today\'s board.', '#e74c3c'); return; }
     document.getElementById('addContentModal').classList.add('show');
 }
-function openFreezeModal() {
-    if (!IS_LOGGED_IN) { openSignInModal(); return; }
-    document.getElementById('freezeModal').classList.add('show');
+function openFreezeModal() { if (!IS_LOGGED_IN) { openSignInModal(); return; } document.getElementById('freezeModal').classList.add('show'); }
+function openBadgesModal() { if (!IS_LOGGED_IN) { openSignInModal(); return; } document.getElementById('badgesModal').classList.add('show'); loadBadgesList(); }
+function openCheckInModal() { if (!IS_LOGGED_IN) { openSignInModal(); return; } resetCheckInModal(); document.getElementById('checkInModal').classList.add('show'); }
+function openNotifsModal() {
+    document.getElementById('notifsModal').classList.add('show');
+    loadNotifications();
 }
-function openBadgesModal() {
-    if (!IS_LOGGED_IN) { openSignInModal(); return; }
-    document.getElementById('badgesModal').classList.add('show');
-    loadBadgesList();
+function openRecapModal() {
+    document.getElementById('recapModal').classList.add('show');
+    loadWeeklyRecap();
+}
+function openCustomPromptsModal() {
+    document.getElementById('customPromptsModal').classList.add('show');
+    loadCustomPrompts();
+}
+function openSearchModal() {
+    document.getElementById('searchModal').classList.add('show');
+    document.getElementById('friendSearchInput').value = '';
+    document.getElementById('searchResults').innerHTML = '';
 }
 function openEditProfileModal() {
-    var u = window.__USER__;
-    if (!u) return;
+    var u = window.__USER__; if (!u) return;
     document.getElementById('editDisplayName').value = u.display_name || '';
     document.getElementById('editBio').value = u.bio || '';
+    document.getElementById('editStatusMsg').value = u.status_msg || '';
+    document.getElementById('editBoardPrivacy').value = u.board_privacy || 'friends';
+    SELECTED_THEME = u.theme_color || 'blue';
+    document.querySelectorAll('#themeColorPicker .color-swatch').forEach(function(s) {
+        s.classList.toggle('selected', s.getAttribute('data-theme') === SELECTED_THEME);
+    });
     document.getElementById('editProfileModal').classList.add('show');
 }
 
-// ---- Notifications ----
+// ---- Notification bar ----
 function showNotif(msg, color) {
     var bar = document.getElementById('notifBar');
     bar.textContent = msg;
-    bar.style.background = color ? color.replace(')', ',0.12)').replace('rgb', 'rgba') : 'rgba(46,204,113,0.12)';
+    bar.style.background = color ? 'rgba(' + hexToRgb(color) + ',0.12)' : 'rgba(46,204,113,0.12)';
     bar.style.color = color || '#2ecc71';
+    bar.style.borderBottomColor = color ? 'rgba(' + hexToRgb(color) + ',0.25)' : '';
     bar.style.display = 'block';
     clearTimeout(bar._t);
     bar._t = setTimeout(function() { bar.style.display = 'none'; }, 4000);
 }
+function hexToRgb(hex) {
+    var r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+    return r+','+g+','+b;
+}
+
+// ---- Push Notifications ----
+function requestPushPermission() {
+    if (!('Notification' in window)) return;
+    if (Notification.permission === 'default') {
+        setTimeout(function() {
+            Notification.requestPermission();
+        }, 3000);
+    }
+}
+function sendBrowserNotif(title, body) {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+    new Notification(title, { body: body, icon: '/static/icon.png' });
+}
 
 // ---- Check-in ----
+function resetCheckInModal() {
+    document.getElementById('checkInPreForm').style.display = '';
+    document.getElementById('checkInResult').style.display = 'none';
+    document.getElementById('milestoneAnim').style.display = 'none';
+    SELECTED_MOOD = '';
+    document.querySelectorAll('.mood-btn').forEach(function(b) { b.classList.remove('selected'); });
+}
+function pickMood(btn) {
+    SELECTED_MOOD = btn.getAttribute('data-mood');
+    document.querySelectorAll('.mood-btn').forEach(function(b) { b.classList.remove('selected'); });
+    btn.classList.add('selected');
+}
+function doCheckIn() {
+    if (!IS_LOGGED_IN) { openSignInModal(); return; }
+    openCheckInModal();
+}
+function submitCheckIn() {
+    fetch('/api/checkin', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ mood: SELECTED_MOOD }) })
+        .then(function(r) { return r.json(); }).then(function(d) {
+            if (!d.ok) { showNotif('Already checked in today!', '#4a90e2'); closeModalById('checkInModal'); return; }
+            document.getElementById('headerStreak').textContent = d.streak;
+            document.getElementById('modalStreakCount').textContent = d.streak;
+            var now = new Date();
+            document.getElementById('modalCheckInDate').textContent = now.toLocaleDateString(undefined, {weekday:'long',month:'long',day:'numeric',year:'numeric'});
+            // Milestone animation
+            var milestones = [3, 7, 14, 30, 100];
+            if (milestones.indexOf(d.streak) !== -1) {
+                var anim = document.getElementById('milestoneAnim');
+                anim.textContent = d.streak + ' day streak! 🎉';
+                anim.style.display = 'block';
+            }
+            document.getElementById('checkInPreForm').style.display = 'none';
+            document.getElementById('checkInResult').style.display = '';
+            // Update mood display
+            if (SELECTED_MOOD) {
+                var moodEl = document.getElementById('moodDisplayMenu');
+                moodEl.textContent = SELECTED_MOOD;
+                moodEl.style.display = '';
+            }
+            loadCheckinHistory();
+            loadBadgesSidebar();
+            loadCheckinStatus();
+            loadChallengesSidebar();
+            sendBrowserNotif('Kindred', 'Checked in! Day ' + d.streak + ' streak 🔥');
+        });
+}
 function loadCheckinStatus() {
     fetch('/api/checkin/status').then(function(r) { return r.json(); }).then(function(d) {
         if (!d.ok) return;
@@ -751,42 +741,60 @@ function loadCheckinStatus() {
         var freeze = document.getElementById('freezeBadge');
         if (d.freezes > 0) { freeze.style.display = ''; freeze.textContent = '❄️ ' + d.freezes; }
         document.getElementById('freezeCount').textContent = d.freezes;
+        if (d.today_mood) {
+            var moodEl = document.getElementById('moodDisplayMenu');
+            moodEl.textContent = d.today_mood;
+            moodEl.style.display = '';
+        }
     });
 }
 function loadCheckinHistory() {
     fetch('/api/checkin/history').then(function(r) { return r.json(); }).then(function(d) {
         if (!d.ok) return;
-        var list = document.getElementById('checkinHistoryList');
-        if (!d.history.length) { list.innerHTML = '<li style="color:var(--text2);font-size:0.8rem;border:none;">No check-ins yet.</li>'; return; }
-        list.innerHTML = d.history.map(function(h) {
-            var parts = h.date.split('-');
-            var label = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2])).toLocaleDateString(undefined, {weekday:'short',month:'short',day:'numeric'});
-            return '<li><span>' + label + '</span><span class="check-in-count">' + h.count + '</span></li>';
-        }).join('');
+        buildCalendar(d.history);
     });
 }
 function loadFriendCheckinCount() {
     fetch('/api/checkin/friends').then(function(r) { return r.json(); }).then(function(d) {
         if (!d.ok || d.count === 0) return;
         var badge = document.getElementById('friendCheckinBadge');
-        badge.style.display = 'flex';
-        badge.textContent = d.count;
+        badge.style.display = 'flex'; badge.textContent = d.count;
         badge.title = d.names.join(', ') + ' checked in today';
     });
 }
-function doCheckIn() {
-    if (!IS_LOGGED_IN) { openSignInModal(); return; }
-    fetch('/api/checkin', { method: 'POST' }).then(function(r) { return r.json(); }).then(function(d) {
-        if (!d.ok) { showNotif('Already checked in today!', '#4a90e2'); return; }
-        document.getElementById('headerStreak').textContent = d.streak;
-        var now = new Date();
-        document.getElementById('modalCheckInDate').textContent = now.toLocaleDateString(undefined, {weekday:'long',month:'long',day:'numeric',year:'numeric'});
-        document.getElementById('modalStreakCount').textContent = d.streak;
-        document.getElementById('modalTodayCount').textContent = '1';
-        document.getElementById('checkInModal').classList.add('show');
-        loadCheckinHistory();
-        loadBadgesSidebar();
-        loadCheckinStatus();
+
+// ---- Calendar ----
+function buildCalendar(history) {
+    var checkedDates = {};
+    (history || []).forEach(function(h) { checkedDates[h.date] = h.mood || ''; });
+    var cal = document.getElementById('calGrid');
+    cal.innerHTML = '';
+    var today = new Date();
+    var days = [];
+    for (var i = 27; i >= 0; i--) {
+        var d = new Date(today);
+        d.setDate(today.getDate() - i);
+        days.push(d);
+    }
+    // Pad start of calendar to align with Sunday
+    var firstDay = days[0].getDay();
+    for (var p = 0; p < firstDay; p++) {
+        var pad = document.createElement('div');
+        cal.appendChild(pad);
+    }
+    days.forEach(function(d) {
+        var iso = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+        var cell = document.createElement('div');
+        cell.className = 'cal-day' + (checkedDates.hasOwnProperty(iso) ? ' checked' : '');
+        cell.title = iso + (checkedDates[iso] ? ' ' + checkedDates[iso] : '');
+        cell.textContent = d.getDate();
+        if (checkedDates[iso]) {
+            var mood = document.createElement('span');
+            mood.className = 'cal-mood';
+            mood.textContent = checkedDates[iso];
+            cell.appendChild(mood);
+        }
+        cal.appendChild(cell);
     });
 }
 
@@ -797,8 +805,7 @@ function useStreakFreeze() {
         closeModalById('freezeModal');
         showNotif('Streak freeze used! Your streak is protected.', '#4a90e2');
         document.getElementById('headerStreak').textContent = d.streak;
-        loadCheckinStatus();
-        loadCheckinHistory();
+        loadCheckinStatus(); loadCheckinHistory();
     });
 }
 
@@ -826,11 +833,10 @@ function shiftBoardDate(delta) {
 
 // ---- Board CRUD ----
 function loadBoardPosts() {
-    var url = '/api/board?date=' + BOARD_DATE;
-    fetch(url).then(function(r) { return r.json(); }).then(function(d) {
+    fetch('/api/board?date=' + BOARD_DATE).then(function(r) { return r.json(); }).then(function(d) {
         if (!d.ok) return;
         renderPosts(d.posts);
-    }).catch(function() {});
+    }).catch(function(){});
 }
 function renderPosts(posts) {
     var container = document.getElementById('whiteboardContent');
@@ -844,70 +850,48 @@ function buildStickerEl(p) {
     el.style.left = (p.left || 20) + 'px';
     el.style.top  = (p.top  || 60) + 'px';
     el.style.width = (p.width || 200) + 'px';
-
-    // Toolbar
+    if (p.pinned) {
+        var pin = document.createElement('span'); pin.className = 'pin-indicator'; pin.textContent = '📌';
+        el.appendChild(pin);
+    }
     var isOwn = IS_LOGGED_IN && BOARD_DATE === TODAY;
-    var toolbar = document.createElement('div');
-    toolbar.className = 'sticker-toolbar';
+    var toolbar = document.createElement('div'); toolbar.className = 'sticker-toolbar';
     if (isOwn) {
-        var colors = ['default','yellow','blue','pink','green','purple'];
-        var colorBtn = document.createElement('button');
-        colorBtn.title = 'Color';
-        colorBtn.textContent = '🎨';
+        var colorBtn = document.createElement('button'); colorBtn.textContent = '🎨'; colorBtn.title = 'Color';
         colorBtn.onclick = function(e) { e.stopPropagation(); cycleStickerColor(el, p); };
         toolbar.appendChild(colorBtn);
-        var delBtn = document.createElement('button');
-        delBtn.textContent = '🗑️';
-        delBtn.title = 'Delete';
+        var pinBtn = document.createElement('button'); pinBtn.textContent = p.pinned ? '📌' : '📍'; pinBtn.title = p.pinned ? 'Unpin' : 'Pin to profile';
+        pinBtn.onclick = function(e) { e.stopPropagation(); togglePin(p.id, pinBtn, p); };
+        toolbar.appendChild(pinBtn);
+        var delBtn = document.createElement('button'); delBtn.textContent = '🗑️'; delBtn.title = 'Delete';
         delBtn.onclick = function(e) { e.stopPropagation(); deletePost(p.id, el); };
         toolbar.appendChild(delBtn);
     }
     el.appendChild(toolbar);
-
-    // Content
     var contentEl = document.createElement('div');
-    if (p.type === 'text') {
-        contentEl.textContent = p.content;
-        contentEl.style.wordBreak = 'break-word';
-    } else {
-        var img = document.createElement('img');
-        img.src = p.content;
-        img.alt = p.type;
-        contentEl.appendChild(img);
-    }
+    if (p.type === 'text') { contentEl.textContent = p.content; contentEl.style.wordBreak = 'break-word'; }
+    else { var img = document.createElement('img'); img.src = p.content; img.alt = p.type; contentEl.appendChild(img); }
     el.appendChild(contentEl);
-
-    // Reactions
-    var reactRow = document.createElement('div');
-    reactRow.className = 'sticker-reactions';
+    var reactRow = document.createElement('div'); reactRow.className = 'sticker-reactions';
     (p.reactions || []).forEach(function(r) {
-        var btn = document.createElement('button');
-        btn.className = 'reaction-btn' + (r.mine ? ' mine' : '');
+        var btn = document.createElement('button'); btn.className = 'reaction-btn' + (r.mine ? ' mine' : '');
         btn.textContent = r.emoji + ' ' + r.count;
         btn.onclick = function(e) { e.stopPropagation(); toggleReaction(p.id, r.emoji, btn, reactRow, p); };
         reactRow.appendChild(btn);
     });
     if (IS_LOGGED_IN) {
-        var addBtn = document.createElement('button');
-        addBtn.className = 'reaction-btn add-reaction';
-        addBtn.textContent = '+ React';
+        var addBtn = document.createElement('button'); addBtn.className = 'reaction-btn add-reaction'; addBtn.textContent = '+ React';
         addBtn.onclick = function(e) { e.stopPropagation(); REACT_POST_ID = p.id; document.getElementById('reactModal').classList.add('show'); };
         reactRow.appendChild(addBtn);
     }
     el.appendChild(reactRow);
-
-    // Resize handle
     if (isOwn) {
-        var handle = document.createElement('div');
-        handle.className = 'resize-handle';
-        el.appendChild(handle);
-        makeResizable(el, handle, p);
+        var handle = document.createElement('div'); handle.className = 'resize-handle';
+        el.appendChild(handle); makeResizable(el, handle, p);
     }
-
     makeDraggable(el, p);
     return el;
 }
-
 var COLOR_CYCLE = ['default','yellow','blue','pink','green','purple'];
 function cycleStickerColor(el, p) {
     var cur = p.color || 'default';
@@ -918,45 +902,51 @@ function cycleStickerColor(el, p) {
     p.color = next;
     fetch('/api/board/' + p.id, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({color: next}) });
 }
-
-function deletePost(id, el) {
-    fetch('/api/board/' + id, { method: 'DELETE' }).then(function(r) { return r.json(); }).then(function(d) {
-        if (d.ok) el.remove();
+function togglePin(postId, btn, p) {
+    fetch('/api/board/' + postId + '/pin', { method: 'POST' }).then(function(r) { return r.json(); }).then(function(d) {
+        if (!d.ok) return;
+        p.pinned = d.pinned;
+        btn.textContent = d.pinned ? '📌' : '📍';
+        btn.title = d.pinned ? 'Unpin' : 'Pin to profile';
+        showNotif(d.pinned ? 'Post pinned to your profile!' : 'Post unpinned.', '#4a90e2');
     });
 }
-
+function deletePost(id, el) {
+    fetch('/api/board/' + id, { method: 'DELETE' }).then(function(r) { return r.json(); }).then(function(d) { if (d.ok) el.remove(); });
+}
 function addTextToBoard() {
     var text = document.getElementById('addTextInput').value.trim();
     if (!text) return;
-    postToBoard('text', text, function() {
-        document.getElementById('addTextInput').value = '';
-        closeModalById('addContentModal');
+    postToBoard('text', text, function() { document.getElementById('addTextInput').value = ''; closeModalById('addContentModal'); });
+}
+function uploadPhotoToBoard() {
+    var fileInput = document.getElementById('photoFileInput');
+    var file = fileInput.files[0];
+    if (!file) { showNotif('Please select an image file.', '#e74c3c'); return; }
+    var fd = new FormData(); fd.append('file', file);
+    fetch('/api/board/upload-image', { method: 'POST', body: fd }).then(function(r) { return r.json(); }).then(function(d) {
+        if (!d.ok) { showNotif(d.error || 'Upload failed', '#e74c3c'); return; }
+        postToBoard('image', d.url, function() { fileInput.value = ''; closeModalById('addContentModal'); });
     });
 }
 function addImageToBoard() {
     var url = document.getElementById('addImageInput').value.trim();
     if (!url) return;
-    postToBoard('image', url, function() {
-        document.getElementById('addImageInput').value = '';
-        closeModalById('addContentModal');
-    });
+    postToBoard('image', url, function() { document.getElementById('addImageInput').value = ''; closeModalById('addContentModal'); });
 }
-function addGifToBoard(url) {
-    postToBoard('gif', url, function() { closeModalById('addContentModal'); });
-}
+function addGifToBoard(url) { postToBoard('gif', url, function() { closeModalById('addContentModal'); }); }
 function postToBoard(type, content, cb) {
     var existing = document.getElementById('whiteboardContent').children.length;
-    var left = 20 + (existing % 4) * 50;
-    var top = 60 + Math.floor(existing / 4) * 80;
-    fetch('/api/board', {
-        method: 'POST', headers: {'Content-Type':'application/json'},
+    var left = 20 + (existing % 4) * 55;
+    var top = 60 + Math.floor(existing / 4) * 90;
+    fetch('/api/board', { method: 'POST', headers: {'Content-Type':'application/json'},
         body: JSON.stringify({ type: type, content: content, left: left, top: top, width: 200, color: SELECTED_COLOR, date: BOARD_DATE })
     }).then(function(r) { return r.json(); }).then(function(d) {
-        if (d.ok) { loadBoardPosts(); if (cb) cb(); }
+        if (d.ok) { loadBoardPosts(); loadChallengesSidebar(); if (cb) cb(); }
     });
 }
 
-// ---- Drag ----
+// ---- Drag & Resize ----
 function makeDraggable(el, p) {
     var dragging = false, startX, startY, startLeft, startTop;
     el.addEventListener('mousedown', function(e) {
@@ -978,57 +968,54 @@ function makeDraggable(el, p) {
         }
     });
 }
-
-// ---- Resize ----
 function makeResizable(el, handle, p) {
     var resizing = false, startX, startW;
-    handle.addEventListener('mousedown', function(e) {
-        e.preventDefault(); e.stopPropagation(); resizing = true;
-        startX = e.clientX; startW = el.offsetWidth;
-    });
-    document.addEventListener('mousemove', function(e) {
-        if (!resizing) return;
-        var w = Math.max(80, startW + e.clientX - startX);
-        el.style.width = w + 'px';
-    });
+    handle.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); resizing = true; startX = e.clientX; startW = el.offsetWidth; });
+    document.addEventListener('mousemove', function(e) { if (!resizing) return; el.style.width = Math.max(80, startW + e.clientX - startX) + 'px'; });
     document.addEventListener('mouseup', function() {
         if (!resizing) return; resizing = false;
-        fetch('/api/board/' + p.id, { method: 'PATCH', headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({ width: el.offsetWidth }) });
+        fetch('/api/board/' + p.id, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ width: el.offsetWidth }) });
     });
 }
 
 // ---- Reactions ----
 function toggleReaction(postId, emoji, btn, reactRow, p) {
     if (!IS_LOGGED_IN) { openSignInModal(); return; }
-    fetch('/api/board/' + postId + '/react', {
-        method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ emoji: emoji })
-    }).then(function(r) { return r.json(); }).then(function(d) {
-        if (!d.ok) return;
-        btn.className = 'reaction-btn' + (d.added ? ' mine' : '');
-        btn.textContent = emoji + ' ' + d.count;
-        if (d.count === 0) btn.remove();
-    });
+    fetch('/api/board/' + postId + '/react', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ emoji: emoji }) })
+        .then(function(r) { return r.json(); }).then(function(d) {
+            if (!d.ok) return;
+            btn.className = 'reaction-btn' + (d.added ? ' mine' : '');
+            btn.textContent = emoji + ' ' + d.count;
+            if (d.count === 0) btn.remove();
+            loadChallengesSidebar();
+        });
 }
 function pickReaction(emoji) {
     closeModalById('reactModal');
     if (!REACT_POST_ID) return;
-    fetch('/api/board/' + REACT_POST_ID + '/react', {
-        method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ emoji: emoji })
-    }).then(function() { loadBoardPosts(); });
+    fetch('/api/board/' + REACT_POST_ID + '/react', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ emoji: emoji }) })
+        .then(function() { loadBoardPosts(); loadChallengesSidebar(); });
     REACT_POST_ID = null;
 }
 
-// ---- Color picker ----
+// ---- Color / Theme picker ----
 function pickColor(el) {
     document.querySelectorAll('#colorPicker .color-swatch').forEach(function(s) { s.classList.remove('selected'); });
     el.classList.add('selected');
     SELECTED_COLOR = el.getAttribute('data-color');
 }
+function pickTheme(el) {
+    document.querySelectorAll('#themeColorPicker .color-swatch').forEach(function(s) { s.classList.remove('selected'); });
+    el.classList.add('selected');
+    SELECTED_THEME = el.getAttribute('data-theme');
+}
+function switchAddTab(tab) {
+    document.querySelectorAll('.modal-tab').forEach(function(el) { el.classList.toggle('active', el.getAttribute('data-tab') === tab); });
+    ['tabText','tabPhoto','tabImage','tabGif'].forEach(function(id) { document.getElementById(id).classList.remove('active'); });
+    document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+}
 
-// ---- Friend feed ----
+// ---- Feed ----
 function loadFeed() {
     fetch('/api/feed').then(function(r) { return r.json(); }).then(function(d) {
         var el = document.getElementById('feedContent');
@@ -1039,42 +1026,36 @@ function loadFeed() {
             var avatarHtml = p.avatar
                 ? '<div class="feed-avatar"><img src="/uploads/' + p.avatar + '" alt=""></div>'
                 : '<div class="feed-avatar">' + initial + '</div>';
-            var contentHtml = '';
             var colorClass = (p.color && p.color !== 'default') ? ' color-' + p.color : '';
-            if (p.type === 'text') {
-                contentHtml = '<div class="feed-content' + colorClass + '">' + escHtml(p.content) + '</div>';
-            } else {
-                contentHtml = '<div class="feed-content' + colorClass + '"><img src="' + escHtml(p.content) + '" alt="post"></div>';
-            }
+            var contentHtml = p.type === 'text'
+                ? '<div class="feed-content' + colorClass + '">' + escHtml(p.content) + '</div>'
+                : '<div class="feed-content' + colorClass + '"><img src="' + escHtml(p.content) + '" alt="post"></div>';
             var reactionsHtml = (p.reactions || []).map(function(r) {
                 return '<button class="reaction-btn' + (r.mine ? ' mine' : '') + '" onclick="toggleFeedReaction(' + p.id + ',\'' + r.emoji + '\',this)">' + r.emoji + ' ' + r.count + '</button>';
-            }).join('');
-            reactionsHtml += '<button class="reaction-btn add-reaction" onclick="openFeedReact(' + p.id + ')">+ React</button>';
+            }).join('') + '<button class="reaction-btn add-reaction" onclick="openFeedReact(' + p.id + ')">+ React</button>';
             var time = p.created_at ? p.created_at.slice(11,16) : '';
             return '<div class="feed-post" data-id="' + p.id + '">' +
-                '<div class="feed-post-header">' + avatarHtml + '<span class="feed-name">' + escHtml(name) + '</span><span class="feed-time">' + time + '</span></div>' +
-                contentHtml +
-                '<div class="feed-reactions">' + reactionsHtml + '</div>' +
-                '</div>';
+                '<div class="feed-post-header">' + avatarHtml +
+                '<a href="/profile/' + escHtml(name) + '" style="text-decoration:none;"><span class="feed-name">' + escHtml(name) + '</span></a>' +
+                '<span class="feed-time">' + time + '</span></div>' +
+                contentHtml + '<div class="feed-reactions">' + reactionsHtml + '</div></div>';
         }).join('');
     });
 }
 function toggleFeedReaction(postId, emoji, btn) {
     if (!IS_LOGGED_IN) { openSignInModal(); return; }
-    fetch('/api/board/' + postId + '/react', {
-        method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ emoji: emoji })
-    }).then(function(r) { return r.json(); }).then(function(d) {
-        if (!d.ok) return;
-        btn.className = 'reaction-btn' + (d.added ? ' mine' : '');
-        btn.textContent = emoji + ' ' + d.count;
-        if (d.count === 0) btn.remove();
-    });
+    fetch('/api/board/' + postId + '/react', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ emoji: emoji }) })
+        .then(function(r) { return r.json(); }).then(function(d) {
+            if (!d.ok) return;
+            btn.className = 'reaction-btn' + (d.added ? ' mine' : '');
+            btn.textContent = emoji + ' ' + d.count;
+            if (d.count === 0) btn.remove();
+            loadChallengesSidebar();
+        });
 }
 function openFeedReact(postId) {
     if (!IS_LOGGED_IN) { openSignInModal(); return; }
-    REACT_POST_ID = postId;
-    document.getElementById('reactModal').classList.add('show');
+    REACT_POST_ID = postId; document.getElementById('reactModal').classList.add('show');
 }
 
 // ---- Badges ----
@@ -1084,8 +1065,8 @@ function loadBadgesSidebar() {
         if (!d.ok) return;
         var row = document.getElementById('sidebarBadges');
         row.innerHTML = d.badges.filter(function(b) { return b.earned; }).map(function(b) {
-            return '<span class="badge-chip" title="' + b.name + ': ' + b.desc + '">' + b.emoji + '<span class="badge-tooltip">' + b.name + '</span></span>';
-        }).join('') || '<span style="font-size:0.8rem;color:var(--text2);">No badges yet. Check in to earn!</span>';
+            return '<span class="badge-chip" title="' + b.name + '"><span>' + b.emoji + '</span><span class="badge-tooltip">' + b.name + '</span></span>';
+        }).join('') || '<span style="font-size:0.78rem;color:var(--text2);">No badges yet. Check in to earn!</span>';
     });
 }
 function loadBadgesList() {
@@ -1094,13 +1075,157 @@ function loadBadgesList() {
         var el = document.getElementById('badgesList');
         el.innerHTML = d.badges.map(function(b) {
             var cls = b.earned ? '' : ' locked-item';
-            var when = b.earned && b.earned_at ? '<span style="font-size:0.75rem;color:var(--text2);">Earned ' + b.earned_at.slice(0,10) + '</span>' : '';
-            return '<div class="badge-list-item' + cls + '">' +
-                '<span class="badge-emoji">' + b.emoji + '</span>' +
-                '<div class="badge-info"><div class="badge-name">' + b.name + '</div><div class="badge-desc">' + b.desc + '</div>' + when + '</div>' +
+            var when = b.earned && b.earned_at ? '<span style="font-size:0.73rem;color:var(--text2);">Earned ' + b.earned_at.slice(0,10) + '</span>' : '';
+            return '<div class="badge-list-item' + cls + '"><span class="badge-emoji">' + b.emoji + '</span><div class="badge-info"><div class="badge-name">' + b.name + '</div><div class="badge-desc">' + b.desc + '</div>' + when + '</div></div>';
+        }).join('');
+    });
+}
+
+// ---- Challenges ----
+function loadChallengesSidebar() {
+    if (!IS_LOGGED_IN) return;
+    fetch('/api/challenges').then(function(r) { return r.json(); }).then(function(d) {
+        if (!d.ok) return;
+        document.getElementById('challengesSidebar').style.display = '';
+        var el = document.getElementById('challengesList');
+        el.innerHTML = d.challenges.map(function(ch) {
+            var pct = Math.round((ch.progress / ch.target) * 100);
+            var barClass = ch.completed ? ' done' : '';
+            return '<div class="challenge-item">' +
+                '<div class="challenge-title">' + ch.emoji + ' ' + ch.title + (ch.completed ? ' ✅' : '') + '</div>' +
+                '<div class="challenge-bar-wrap"><div class="challenge-bar' + barClass + '" style="width:' + pct + '%"></div></div>' +
+                '<div class="challenge-label">' + ch.progress + ' / ' + ch.target + ' — ' + ch.desc + '</div>' +
                 '</div>';
         }).join('');
     });
+}
+
+// ---- Notifications ----
+var NOTIF_PREV_COUNT = 0;
+function pollNotifications() {
+    if (!IS_LOGGED_IN) return;
+    fetch('/api/notifications').then(function(r) { return r.json(); }).then(function(d) {
+        if (!d.ok) return;
+        var count = d.unread_count || 0;
+        var badge = document.getElementById('notifCount');
+        if (count > 0) {
+            badge.style.display = 'flex'; badge.textContent = count > 9 ? '9+' : count;
+        } else {
+            badge.style.display = 'none';
+        }
+        // Browser notification for new ones
+        if (count > NOTIF_PREV_COUNT && NOTIF_PREV_COUNT > 0 && d.notifications.length > 0) {
+            var n = d.notifications[0];
+            sendBrowserNotif('Kindred', n.message);
+        }
+        NOTIF_PREV_COUNT = count;
+    });
+    setTimeout(pollNotifications, 30000);
+}
+function loadNotifications() {
+    fetch('/api/notifications').then(function(r) { return r.json(); }).then(function(d) {
+        var el = document.getElementById('notifsList');
+        if (!d.ok || !d.notifications.length) { el.innerHTML = '<span style="color:var(--text2);font-size:0.875rem;">No notifications yet.</span>'; return; }
+        var icons = { nudge: '👋', friend_request: '🤝', friend_accepted: '🎉', friend_checkin: '✅' };
+        el.innerHTML = d.notifications.map(function(n) {
+            var icon = icons[n.type] || '🔔';
+            var cls = n.read ? '' : ' unread';
+            var time = n.created_at ? n.created_at.slice(0,16).replace('T',' ') : '';
+            return '<div class="notif-item' + cls + '"><span class="notif-icon">' + icon + '</span><div class="notif-msg">' + escHtml(n.message) + '<div class="notif-time">' + time + '</div></div></div>';
+        }).join('');
+        // Mark as read
+        fetch('/api/notifications/read', { method: 'POST' }).then(function() {
+            var badge = document.getElementById('notifCount'); badge.style.display = 'none';
+            NOTIF_PREV_COUNT = 0;
+        });
+    });
+}
+
+// ---- Weekly Recap ----
+function loadWeeklyRecap() {
+    fetch('/api/weekly-recap').then(function(r) { return r.json(); }).then(function(d) {
+        var el = document.getElementById('recapContent');
+        if (!d.ok) { el.innerHTML = '<span style="color:#e74c3c;">Failed to load.</span>'; return; }
+        var myCount = d.my_checkins.length;
+        var moods = d.my_checkins.filter(function(c) { return c.mood; }).map(function(c) { return c.mood; }).join(' ');
+        var html = '<div style="margin-bottom:1rem;padding:0.75rem;background:rgba(74,144,226,0.08);border-radius:8px;">';
+        html += '<strong>Your week:</strong> ' + myCount + '/7 check-ins' + (moods ? ' · Moods: ' + moods : '') + '</div>';
+        if (d.friends_activity.length) {
+            html += '<div style="font-size:0.8rem;font-weight:600;color:var(--text2);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em;">Friend Activity</div>';
+            html += d.friends_activity.map(function(f) {
+                var avatarHtml = f.avatar
+                    ? '<div class="recap-avatar"><img src="/uploads/' + f.avatar + '" alt=""></div>'
+                    : '<div class="recap-avatar">' + f.display_name[0].toUpperCase() + '</div>';
+                return '<div class="recap-friend">' + avatarHtml +
+                    '<div class="recap-info"><strong>' + escHtml(f.display_name) + '</strong>' +
+                    '<div class="recap-stat">' + f.checkins_this_week + '/7 check-ins this week · 🔥 ' + f.streak + ' day streak</div></div></div>';
+            }).join('');
+        } else { html += '<p style="color:var(--text2);font-size:0.875rem;">Add friends to see their weekly activity!</p>'; }
+        el.innerHTML = html;
+    });
+}
+
+// ---- Custom Prompts ----
+function loadCustomPrompts() {
+    fetch('/api/custom-prompts').then(function(r) { return r.json(); }).then(function(d) {
+        var el = document.getElementById('customPromptsList');
+        if (!d.ok || !d.prompts.length) { el.innerHTML = '<p style="color:var(--text2);font-size:0.875rem;">No custom prompts yet.</p>'; return; }
+        el.innerHTML = d.prompts.map(function(p) {
+            return '<div class="prompt-item"><span>' + escHtml(p.prompt) + '</span>' +
+                '<button class="prompt-del-btn" onclick="deleteCustomPrompt(' + p.id + ', this)">🗑️</button></div>';
+        }).join('');
+    });
+}
+function addCustomPrompt() {
+    var input = document.getElementById('newPromptInput');
+    var prompt = input.value.trim();
+    if (!prompt) return;
+    fetch('/api/custom-prompts', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ prompt: prompt }) })
+        .then(function(r) { return r.json(); }).then(function(d) {
+            if (d.ok) { input.value = ''; loadCustomPrompts(); showNotif('Custom prompt added!'); }
+        });
+}
+function deleteCustomPrompt(id, btn) {
+    fetch('/api/custom-prompts/' + id, { method: 'DELETE' }).then(function(r) { return r.json(); }).then(function(d) {
+        if (d.ok) { btn.closest('.prompt-item').remove(); }
+    });
+}
+
+// ---- Friend search ----
+var searchDebounce;
+function debounceSearch() {
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(searchFriends, 350);
+}
+function searchFriends() {
+    var q = document.getElementById('friendSearchInput').value.trim();
+    var el = document.getElementById('searchResults');
+    if (!q) { el.innerHTML = ''; return; }
+    el.innerHTML = '<span style="color:var(--text2);font-size:0.85rem;">Searching...</span>';
+    fetch('/api/search/users?q=' + encodeURIComponent(q)).then(function(r) { return r.json(); }).then(function(d) {
+        if (!d.ok || !d.users.length) { el.innerHTML = '<span style="color:var(--text2);font-size:0.85rem;">No users found.</span>'; return; }
+        el.innerHTML = d.users.map(function(u) {
+            var avatarHtml = u.avatar
+                ? '<div class="search-avatar"><img src="/uploads/' + u.avatar + '" alt=""></div>'
+                : '<div class="search-avatar">' + u.display_name[0].toUpperCase() + '</div>';
+            var actionHtml = u.friend_status === 'friend'
+                ? '<span style="color:#2ecc71;font-size:0.78rem;">Friends</span>'
+                : u.friend_status === 'pending_sent'
+                ? '<span style="color:var(--text2);font-size:0.78rem;">Pending</span>'
+                : '<button class="btn-sm" onclick="addFriendFromSearch(' + u.id + ', this)">Add</button>';
+            return '<div class="search-result-item">' + avatarHtml +
+                '<div class="search-name"><a href="/profile/' + escHtml(u.display_name) + '" style="color:var(--text);text-decoration:none;">' + escHtml(u.display_name) + '</a></div>' +
+                actionHtml + '</div>';
+        }).join('');
+    });
+}
+function addFriendFromSearch(userId, btn) {
+    btn.disabled = true; btn.textContent = '...';
+    fetch('/api/friend-request', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ to_user_id: userId }) })
+        .then(function(r) { return r.json(); }).then(function(d) {
+            if (d.ok) { btn.textContent = 'Sent!'; btn.style.color = '#2ecc71'; }
+            else { btn.disabled = false; btn.textContent = 'Add'; showNotif(d.error || 'Failed', '#e74c3c'); }
+        });
 }
 
 // ---- Unread messages dot ----
@@ -1121,12 +1246,14 @@ function pollUnread() {
 function saveProfile() {
     var dn = document.getElementById('editDisplayName').value.trim();
     var bio = document.getElementById('editBio').value.trim();
+    var statusMsg = document.getElementById('editStatusMsg').value.trim();
+    var boardPrivacy = document.getElementById('editBoardPrivacy').value;
     var fileInput = document.getElementById('avatarFileInput');
     var file = fileInput.files[0];
     var doSave = function() {
         fetch('/api/profile/update', {
             method: 'POST', headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({ display_name: dn, bio: bio })
+            body: JSON.stringify({ display_name: dn, bio: bio, status_msg: statusMsg, theme_color: SELECTED_THEME, board_privacy: boardPrivacy })
         }).then(function(r) { return r.json(); }).then(function(d) {
             if (d.ok) { closeModalById('editProfileModal'); showNotif('Profile updated!'); location.reload(); }
         });
@@ -1138,18 +1265,13 @@ function saveProfile() {
 }
 
 // ---- GIF search ----
-function switchAddTab(tab) {
-    document.querySelectorAll('.modal-tab').forEach(function(el) { el.classList.toggle('active', el.getAttribute('data-tab') === tab); });
-    ['tabText','tabImage','tabGif'].forEach(function(id) { document.getElementById(id).classList.remove('active'); });
-    document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
-}
 function searchTenorGifs() {
     var q = document.getElementById('gifSearchInput').value.trim();
     if (!q) return;
     var el = document.getElementById('gifResults');
-    el.innerHTML = '<span style="color:var(--text2);font-size:0.85rem;">Loading...</span>';
+    el.innerHTML = '<span style="color:var(--text2);font-size:0.82rem;">Loading...</span>';
     fetch('/api/tenor-search?q=' + encodeURIComponent(q)).then(function(r) { return r.json(); }).then(function(data) {
-        if (data.error) { el.innerHTML = '<span style="color:#e74c3c;">' + (data.error === 'TENOR_API_KEY not set' ? 'GIF search not configured. Add TENOR_API_KEY to enable.' : data.error) + '</span>'; return; }
+        if (data.error) { el.innerHTML = '<span style="color:#e74c3c;font-size:0.82rem;">' + (data.error === 'TENOR_API_KEY not set' ? 'GIF search not configured.' : data.error) + '</span>'; return; }
         var results = data.results || [];
         if (!results.length) { el.innerHTML = '<span style="color:var(--text2);">No GIFs found.</span>'; return; }
         el.innerHTML = results.map(function(g) {

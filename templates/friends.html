@@ -11,6 +11,7 @@
             --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.06);
             --text: #eee; --text2: #aaa; --text3: rgba(255,255,255,0.9);
             --sticker-bg: rgba(255,255,255,0.1); --sticker-border: rgba(255,255,255,0.18);
+            --input-bg: rgba(255,255,255,0.05); --input-border: rgba(255,255,255,0.2);
         }
         :root[data-theme="light"] {
             --bg: linear-gradient(135deg, #e8f4fd 0%, #dbeafe 100%);
@@ -18,6 +19,7 @@
             --border: rgba(0,0,0,0.1); --border2: rgba(0,0,0,0.06);
             --text: #1a1a2e; --text2: #555; --text3: #1a1a2e;
             --sticker-bg: rgba(0,0,0,0.05); --sticker-border: rgba(0,0,0,0.12);
+            --input-bg: rgba(255,255,255,0.8); --input-border: rgba(0,0,0,0.2);
         }
         * { box-sizing: border-box; }
         body { font-family: system-ui,-apple-system,sans-serif; margin: 0; min-height: 100vh; background: var(--bg); color: var(--text); }
@@ -28,17 +30,30 @@
         }
         .header a { color: #4a90e2; text-decoration: none; font-size: 0.9rem; }
         .header a:hover { text-decoration: underline; }
-        .container { max-width: 700px; margin: 0 auto; padding: 2rem 1.5rem; }
-        h1 { margin: 0 0 0.4rem; }
-        .subtitle { color: var(--text2); font-size: 0.9rem; margin-bottom: 1.75rem; }
-        .friend-list { display: flex; flex-direction: column; gap: 0.7rem; }
+        .container { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; }
+        .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem; }
+        h1 { margin: 0 0 0.25rem; }
+        .subtitle { color: var(--text2); font-size: 0.875rem; }
+        .btn-sm {
+            padding: 0.35rem 0.75rem; border-radius: 7px; font-size: 0.8rem;
+            font-weight: 600; cursor: pointer; border: none; text-decoration: none;
+            display: inline-block; transition: all 0.2s;
+        }
+        .btn-msg     { background: #4a90e2; color: white; }
+        .btn-msg:hover { background: #357abd; }
+        .btn-profile { background: var(--sticker-bg); border: 1px solid var(--sticker-border); color: var(--text); }
+        .btn-profile:hover { border-color: #4a90e2; }
+        .btn-nudge   { background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3); color: #f59e0b; }
+        .btn-nudge:hover { background: rgba(245,158,11,0.25); }
+        .btn-recap   { background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.25); color: #2ecc71; }
+        .btn-recap:hover { background: rgba(46,204,113,0.2); }
+        .friend-list { display: flex; flex-direction: column; gap: 0.75rem; }
         .friend-card {
-            display: flex; align-items: center; gap: 1rem;
-            padding: 1rem 1.1rem; background: var(--surface);
-            border-radius: 10px; border: 1px solid var(--border2);
-            transition: border-color 0.2s;
+            background: var(--surface); border-radius: 12px; border: 1px solid var(--border2);
+            padding: 1rem 1.1rem; transition: border-color 0.2s;
         }
         .friend-card:hover { border-color: var(--border); }
+        .friend-card-top { display: flex; align-items: center; gap: 1rem; }
         .friend-avatar {
             width: 48px; height: 48px; border-radius: 50%; background: #4a90e2;
             display: flex; align-items: center; justify-content: center;
@@ -47,36 +62,42 @@
         .friend-avatar img { width: 48px; height: 48px; object-fit: cover; }
         .friend-info { flex: 1; min-width: 0; }
         .friend-name { font-weight: 600; font-size: 1rem; color: var(--text3); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-        .friend-email { color: var(--text2); font-size: 0.85rem; margin-top: 1px; }
+        .friend-status-msg { color: var(--text2); font-size: 0.8rem; margin-top: 1px; font-style: italic; }
         .streak-pill {
-            display: inline-flex; align-items: center; gap: 0.25rem;
-            font-size: 0.8rem; font-weight: 600;
+            display: inline-flex; align-items: center; gap: 0.2rem;
+            font-size: 0.78rem; font-weight: 600;
             background: rgba(245,158,11,0.12); color: #f59e0b;
-            border: 1px solid rgba(245,158,11,0.25); border-radius: 12px;
-            padding: 1px 8px;
+            border: 1px solid rgba(245,158,11,0.25); border-radius: 12px; padding: 1px 7px;
         }
-        .checkin-dot {
-            width: 8px; height: 8px; border-radius: 50%; background: #2ecc71;
-            display: inline-block; flex-shrink: 0;
+        .shared-streak-pill {
+            display: inline-flex; align-items: center; gap: 0.2rem;
+            font-size: 0.75rem; font-weight: 600;
+            background: rgba(46,204,113,0.12); color: #2ecc71;
+            border: 1px solid rgba(46,204,113,0.25); border-radius: 12px; padding: 1px 7px;
         }
+        .checkin-dot { width: 8px; height: 8px; border-radius: 50%; background: #2ecc71; display: inline-block; flex-shrink: 0; }
         .checkin-dot.off { background: var(--sticker-border); }
-        .friend-actions { display: flex; gap: 0.5rem; align-items: center; flex-shrink: 0; flex-wrap: wrap; }
-        .btn-sm {
-            padding: 0.35rem 0.75rem; border-radius: 7px; font-size: 0.8rem;
-            font-weight: 600; cursor: pointer; border: none; text-decoration: none;
-            display: inline-block; transition: all 0.2s;
-        }
-        .btn-msg { background: #4a90e2; color: white; }
-        .btn-msg:hover { background: #357abd; }
-        .btn-profile { background: var(--sticker-bg); border: 1px solid var(--sticker-border); color: var(--text); }
-        .btn-profile:hover { border-color: #4a90e2; }
-        .unread-badge {
-            background: #e74c3c; color: white; border-radius: 50%;
-            width: 18px; height: 18px; font-size: 0.65rem; font-weight: 700;
-            display: inline-flex; align-items: center; justify-content: center;
-        }
+        .friend-actions { display: flex; gap: 0.45rem; align-items: center; flex-shrink: 0; flex-wrap: wrap; }
+        .unread-badge { background: #e74c3c; color: white; border-radius: 50%; width: 17px; height: 17px; font-size: 0.62rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
+        .nudge-sent { font-size: 0.75rem; color: var(--text2); }
         .empty-state { color: var(--text2); text-align: center; padding: 3rem; font-size: 0.95rem; }
         .empty-state a { color: #4a90e2; }
+        /* Search */
+        .search-bar { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
+        .search-input { flex: 1; padding: 0.55rem 0.75rem; border: 1px solid var(--input-border); border-radius: 8px; background: var(--input-bg); color: var(--text); font-size: 0.875rem; outline: none; }
+        .search-input:focus { border-color: #4a90e2; }
+        /* Recap Modal */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.show { display: flex; }
+        .modal-box { background: var(--bg-solid); padding: 1.6rem; border-radius: 12px; width: 90%; max-width: 440px; border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(0,0,0,0.4); position: relative; max-height: 88vh; overflow-y: auto; }
+        .modal-box h2 { margin: 0 0 1rem; font-size: 1.15rem; }
+        .close-btn { background: transparent; border: none; color: var(--text2); font-size: 1.4rem; cursor: pointer; position: absolute; top: 0.7rem; right: 0.7rem; }
+        .recap-friend { display: flex; align-items: center; gap: 0.65rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border2); }
+        .recap-avatar { width: 36px; height: 36px; border-radius: 50%; background: #4a90e2; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.9rem; color: white; overflow: hidden; flex-shrink: 0; }
+        .recap-avatar img { width: 36px; height: 36px; object-fit: cover; }
+        .recap-info { flex: 1; font-size: 0.875rem; }
+        .recap-stat { font-size: 0.78rem; color: var(--text2); }
+        .notif-bar { padding: 0.4rem 0; margin-bottom: 0.75rem; font-size: 0.85rem; color: #2ecc71; display: none; }
     </style>
 </head>
 <body>
@@ -91,37 +112,58 @@
     <span>
         <a href="/leaderboard">Leaderboard</a>
         &nbsp;·&nbsp;
+        <a href="/groups">Groups</a>
+        &nbsp;·&nbsp;
         <a href="/users">Community</a>
     </span>
 </div>
 
 <div class="container">
-    <h1>Friends</h1>
-    <p class="subtitle">People you're connected with</p>
+    <div class="page-header">
+        <div>
+            <h1>Friends</h1>
+            <p class="subtitle">People you're connected with</p>
+        </div>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <button class="btn-sm btn-recap" onclick="openRecapModal()">Weekly Recap</button>
+        </div>
+    </div>
+
+    <div id="notifBar" class="notif-bar"></div>
+
+    <!-- Search -->
+    <div class="search-bar">
+        <input class="search-input" type="text" id="filterInput" placeholder="Filter friends by name..." oninput="filterFriends()">
+    </div>
 
     {% if friends %}
-    <div class="friend-list">
+    <div class="friend-list" id="friendList">
         {% for f in friends %}
-        <div class="friend-card">
-            {% if f.avatar %}
-            <div class="friend-avatar"><img src="/uploads/{{ f.avatar }}" alt="{{ f.display_name }}"></div>
-            {% else %}
-            <div class="friend-avatar">{{ f.display_name[0]|upper if f.display_name else '?' }}</div>
-            {% endif %}
-            <div class="friend-info">
-                <div class="friend-name">
-                    {{ f.display_name }}
-                    <span class="streak-pill">🔥 {{ f.streak }}</span>
-                    <span class="checkin-dot {{ '' if f.checked_in_today else 'off' }}" title="{{ 'Checked in today' if f.checked_in_today else 'Not checked in today' }}"></span>
+        <div class="friend-card" data-name="{{ f.display_name|lower }}">
+            <div class="friend-card-top">
+                {% if f.avatar %}
+                <div class="friend-avatar"><img src="/uploads/{{ f.avatar }}" alt="{{ f.display_name }}"></div>
+                {% else %}
+                <div class="friend-avatar">{{ f.display_name[0]|upper if f.display_name else '?' }}</div>
+                {% endif %}
+                <div class="friend-info">
+                    <div class="friend-name">
+                        {{ f.display_name }}
+                        <span class="streak-pill">🔥 {{ f.streak }}</span>
+                        <span class="shared-streak-pill" id="shared-{{ f.id }}" style="display:none;">🤝 0</span>
+                        <span class="checkin-dot {{ '' if f.checked_in_today else 'off' }}" title="{{ 'Checked in today' if f.checked_in_today else 'Not checked in today' }}"></span>
+                    </div>
+                    {% if f.status_msg %}<div class="friend-status-msg">{{ f.status_msg }}</div>{% endif %}
                 </div>
-                <div class="friend-email">{{ f.email }}</div>
-            </div>
-            <div class="friend-actions">
-                <a href="/chat/{{ f.id }}" class="btn-sm btn-msg">
-                    Message
-                    {% if f.unread > 0 %}<span class="unread-badge">{{ f.unread }}</span>{% endif %}
-                </a>
-                <a href="/profile/{{ f.display_name }}" class="btn-sm btn-profile">Profile</a>
+                <div class="friend-actions">
+                    <a href="/chat/{{ f.id }}" class="btn-sm btn-msg">
+                        Message{% if f.unread > 0 %}&nbsp;<span class="unread-badge">{{ f.unread }}</span>{% endif %}
+                    </a>
+                    {% if not f.checked_in_today %}
+                    <button class="btn-sm btn-nudge" onclick="nudgeFriend({{ f.id }}, this)">Nudge</button>
+                    {% endif %}
+                    <a href="/profile/{{ f.display_name }}" class="btn-sm btn-profile">Profile</a>
+                </div>
             </div>
         </div>
         {% endfor %}
@@ -133,5 +175,80 @@
     </div>
     {% endif %}
 </div>
+
+<!-- Recap modal -->
+<div class="modal-overlay" id="recapModal" onclick="if(event.target.id==='recapModal') closeModal()">
+    <div class="modal-box">
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+        <h2>Weekly Recap</h2>
+        <div id="recapContent"><span style="color:var(--text2);font-size:0.875rem;">Loading...</span></div>
+    </div>
+</div>
+
+<script>
+// Load shared streaks for all friends
+var FRIEND_IDS = [{% for f in friends %}{{ f.id }}{% if not loop.last %},{% endif %}{% endfor %}];
+FRIEND_IDS.forEach(function(fid) {
+    fetch('/api/friends/' + fid + '/shared-streak').then(function(r) { return r.json(); }).then(function(d) {
+        if (!d.ok || d.streak < 2) return;
+        var el = document.getElementById('shared-' + fid);
+        if (el) { el.textContent = '🤝 ' + d.streak; el.style.display = ''; el.title = d.streak + ' day shared streak'; }
+    });
+});
+
+function nudgeFriend(friendId, btn) {
+    btn.disabled = true; btn.textContent = '...';
+    fetch('/api/nudge', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ to_user_id: friendId }) })
+        .then(function(r) { return r.json(); }).then(function(d) {
+            if (d.ok) { btn.textContent = 'Nudged!'; btn.className = 'btn-sm nudge-sent'; showNotif('Nudge sent!'); }
+            else { btn.disabled = false; btn.textContent = 'Nudge'; showNotif(d.error || 'Failed', '#e74c3c'); }
+        });
+}
+
+function filterFriends() {
+    var q = document.getElementById('filterInput').value.toLowerCase();
+    document.querySelectorAll('.friend-card').forEach(function(card) {
+        card.style.display = card.getAttribute('data-name').includes(q) ? '' : 'none';
+    });
+}
+
+function openRecapModal() {
+    document.getElementById('recapModal').classList.add('show');
+    loadWeeklyRecap();
+}
+function closeModal() { document.getElementById('recapModal').classList.remove('show'); }
+
+function loadWeeklyRecap() {
+    fetch('/api/weekly-recap').then(function(r) { return r.json(); }).then(function(d) {
+        var el = document.getElementById('recapContent');
+        if (!d.ok) { el.innerHTML = '<span style="color:#e74c3c;">Failed to load.</span>'; return; }
+        var myCount = d.my_checkins.length;
+        var moods = d.my_checkins.filter(function(c){ return c.mood; }).map(function(c){ return c.mood; }).join(' ');
+        var html = '<div style="margin-bottom:1rem;padding:0.75rem;background:rgba(74,144,226,0.08);border-radius:8px;">';
+        html += '<strong>Your week:</strong> ' + myCount + '/7 check-ins' + (moods ? ' · Moods: ' + moods : '') + '</div>';
+        if (d.friends_activity.length) {
+            html += '<div style="font-size:0.78rem;font-weight:600;color:var(--text2);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em;">Friend Activity</div>';
+            html += d.friends_activity.map(function(f) {
+                var bar = Math.round((f.checkins_this_week / 7) * 100);
+                var avatarHtml = f.avatar
+                    ? '<div class="recap-avatar"><img src="/uploads/' + f.avatar + '" alt=""></div>'
+                    : '<div class="recap-avatar">' + f.display_name[0].toUpperCase() + '</div>';
+                return '<div class="recap-friend">' + avatarHtml +
+                    '<div class="recap-info"><strong>' + escHtml(f.display_name) + '</strong>' +
+                    '<div class="recap-stat">' + f.checkins_this_week + '/7 check-ins · 🔥 ' + f.streak + ' streak</div>' +
+                    '<div style="background:rgba(255,255,255,0.1);border-radius:3px;height:4px;margin-top:3px;"><div style="background:#4a90e2;height:4px;border-radius:3px;width:' + bar + '%"></div></div></div></div>';
+            }).join('');
+        } else { html += '<p style="color:var(--text2);font-size:0.875rem;">Add friends to see their activity!</p>'; }
+        el.innerHTML = html;
+    });
+}
+
+function showNotif(msg, color) {
+    var bar = document.getElementById('notifBar');
+    bar.textContent = msg; bar.style.color = color || '#2ecc71'; bar.style.display = 'block';
+    clearTimeout(bar._t); bar._t = setTimeout(function(){ bar.style.display = 'none'; }, 3500);
+}
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+</script>
 </body>
 </html>
